@@ -30,3 +30,13 @@ export const saveForm = async (payload) => {
 		return null
 	}
 }
+
+export const getTopicList = async () => {
+	try {
+		const res = await axios.get(apiEndpoints.topic_list)
+		return res.data
+	} catch (error) {
+		console.log(error.message);
+		return null
+	}
+}

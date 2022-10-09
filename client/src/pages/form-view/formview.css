@@ -24,9 +24,25 @@
 
 .answer-input{
 	margin-top: 1rem;
+	line-height: 1.5rem;
 	height: 2rem;
-	width: 20rem;
+	width: calc(var(--width) - 0.5rem);
 	padding-left: 0.5rem;
+	border: 0;
+	border-bottom: 1px solid rgb(5, 82, 184);
+	outline: none;
+}
+
+.answer-dropdown{
+	margin-top: 0.5rem;
+	width: var(--width);
+	height: 2rem;
+	border: 1px solid rgb(5, 82, 184);
+	outline: none;
+}
+
+.answer-dropdown option{
+	font-size: 1rem;
 }
 
 .option-input{
@@ -54,7 +70,7 @@
 }
 
 .options-input:hover{
-	border: 1px solid rgb(150, 172, 201);
+	border: 1px solid rgb(5, 82, 184);
 }
 
 .options-input-label{

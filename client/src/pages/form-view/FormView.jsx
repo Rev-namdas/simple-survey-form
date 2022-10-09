@@ -62,6 +62,7 @@ export default function FormView() {
                 <div>
                     <input
                         type="text"
+                        autoComplete="off"
                         className="answer-input"
                         name="option1"
                         value={forms[index]["answer"]}
@@ -74,8 +75,9 @@ export default function FormView() {
                 <div>
                     <textarea
                         id={`textarea${index}`}
+                        className="answer-input"
                         cols="42"
-                        rows="3"
+                        rows="4"
                         name="option1"
                         value={forms[index]["answer"]}
                         onChange={(e) => handleOptionChange(e, index)}
@@ -87,7 +89,7 @@ export default function FormView() {
                 <div>
                     <select
                         name="selection"
-                        className="option-input"
+                        className="answer-dropdown"
                         id={`selection${index}`}
                         onChange={(e) => handleOptionChange(e, index)}
                     >

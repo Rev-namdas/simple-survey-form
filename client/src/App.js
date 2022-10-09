@@ -3,7 +3,10 @@ import './App.css';
 import FormCreate from './pages/form-create/FormCreate';
 import FormView from './pages/form-view/FormView';
 import HomePage from './pages/home-page/HomePage';
+import Error404page from './pages/message-page/Error404page';
 import MessagePage from './pages/message-page/MessagePage';
+import ResponseDetails from './pages/response-page/ResponseDetails';
+import ResponsePage from './pages/response-page/ResponsePage';
 
 function App() {
   return (
@@ -13,6 +16,9 @@ function App() {
         <Route path='/new/:url' element={<FormCreate />} />
         <Route path='/view/:url' element={<FormView />} />
         <Route path='/thank-you' element={<MessagePage />} />
+        <Route path='/admin/responses' element={<ResponsePage />} />
+        <Route path='/admin/responses/list/:id' element={<ResponseDetails />} />
+        <Route path='*' element={<Error404page />} />
       </Routes>
     </Router>
   );

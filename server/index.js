@@ -17,10 +17,10 @@ const db = mysql.createConnection({
 });
 
 app.listen(1111, () => {
-    console.log("✅ Server Conected !");
+    console.log("✅ Server Connected !");
     db.connect((err) => {
         if (err) {
-            console.log("Error: ", err.message);
+            console.log("❌ Error: ", err.message);
         } else {
             console.log("📌 DB Connected !");
         }
@@ -71,6 +71,24 @@ app.get("/api/fetch/:name", (req, res) => {
         }
     });
 });
+
+app.get("/api/topic/list", (req, res) => {
+    const sql = "SELECT id, topic, url FROM forms"
+
+    db.query(sql, (err, result) => {
+        if(err){
+            console.log("❌ Error:", err.message);
+            return res.send({
+                flag: "FAIL",
+                message: "Something went wrong"
+            });
+        }
+
+        if(result){
+            return res.send(result)
+        }
+    })
+})
 
 app.post("/api/answer/save", (req, res) => {
     const { topic_id, json_data } = req.body;
