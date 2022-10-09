@@ -1,0 +1,18 @@
+.message__wrapper{
+	display: flex;
+	justify-content: center;
+}
+
+.message__container{
+	height: 10rem;
+	width: 40rem;
+	margin-top: 2rem;
+	text-align: center;
+	background-color: #fff;
+	border-radius: 0.5rem;
+	box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2);
+}
+
+.message__submit-link{
+	cursor: pointer;
+}
