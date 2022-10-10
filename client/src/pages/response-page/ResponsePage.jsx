@@ -22,7 +22,7 @@ export default function ResponsePage() {
 		<div>ResponsePage</div> <br />
 		{topicList.map((each, index) => (
 			<div key={index}>
-				<Link to={`/admin/responses/list/${each.id}`}>{ each.topic }</Link>
+				<Link to={`/admin/responses/list/${each.id}`} state={{ topic: each.topic }}>{ each.topic }</Link>
 			</div>
 		))}
 	</>

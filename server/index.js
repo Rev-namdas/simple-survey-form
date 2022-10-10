@@ -58,7 +58,7 @@ app.post("/api/create", (req, res) => {
 app.get("/api/fetch/:name", (req, res) => {
     const { name } = req.params;
 
-    const sql = "SELECT * FROM forms WHERE url = ?";
+    const sql = "SELECT * FROM forms WHERE url = ? LIMIT 1";
 
     db.query(sql, name, (err, result) => {
         if (err) {
@@ -76,6 +76,26 @@ app.get("/api/topic/list", (req, res) => {
     const sql = "SELECT id, topic, url FROM forms"
 
     db.query(sql, (err, result) => {
+        if(err){
+            console.log("❌ Error:", err.message);
+            return res.send({
+                flag: "FAIL",
+                message: "Something went wrong"
+            });
+        }
+
+        if(result){
+            return res.send(result)
+        }
+    })
+})
+
+app.get("/api/topic/details/:id", (req, res) => {
+    const { id } = req.params
+    
+    const sql = "SELECT * FROM answers WHERE topic_id = ?"
+
+    db.query(sql, id, (err, result) => {
         if(err){
             console.log("❌ Error:", err.message);
             return res.send({

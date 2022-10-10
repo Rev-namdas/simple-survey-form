@@ -40,3 +40,13 @@ export const getTopicList = async () => {
 		return null
 	}
 }
+
+export const getTopicDetailsById = async (payload) => {
+	try {
+		const res = await axios.get(apiEndpoints.topic_details_by_id + `/${payload}`)
+		return res.data
+	} catch (error) {
+		console.log(error.message);
+		return null
+	}
+}
