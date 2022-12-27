@@ -9,6 +9,7 @@ export default function FormView() {
     const params = useParams()
     const navigate = useNavigate()
     const [forms, setForms] = useState([]);
+    const [rangeValue, setRangeValue] = useState(5)
     const [topicId, setTopicId] = useState(0);
 
     const fetchData = async () => {
@@ -38,7 +39,12 @@ export default function FormView() {
 
     const handleOptionsChange = (e, index) => {
         const update = [...forms];
-        update[index]["answer"] += e.target.value + ",";
+        
+        if((update[index]["answer"]).length > 1){
+            update[index]["answer"] += ", " + e.target.value;
+        } else {
+            update[index]["answer"] += e.target.value;
+        }
 
         setForms(update);
     };
@@ -48,7 +54,6 @@ export default function FormView() {
             topic_id: topicId,
             json_data: JSON.stringify(forms)
         }
-
         const res = await saveForm(payload)
         
         if(res.flag === 'SUCCESS'){
@@ -238,8 +243,22 @@ export default function FormView() {
             );
         } else if (item === 6) {
             return (
-                <div className="range-input-group">
-                    <div className="range-input-options">
+                <div>
+                    <div className="form__slider-label">{ rangeValue }</div>
+                    <input 
+                        type="range" 
+                        className="form__slider"
+                        name="range" 
+                        id="range" 
+                        min={0}
+                        max={10}
+                        value={rangeValue}
+                        onChange={(e) => {
+                            handleOptionChange(e, index)
+                            setRangeValue(e.target.value)
+                        }}
+                    />
+                    {/* <div className="range-input-options">
                         <input
                             type="radio"
                             name={`range${index}`}
@@ -367,7 +386,7 @@ export default function FormView() {
                         <label htmlFor={`range10${index}`}>
                             <div className="range-input-label">10</div>
                         </label>
-                    </div>
+                    </div> */}
                 </div>
             );
         }
