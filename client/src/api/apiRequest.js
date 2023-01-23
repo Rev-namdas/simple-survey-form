@@ -21,9 +21,19 @@ export const getForm = async (payload) => {
 	}
 }
 
-export const saveForm = async (payload) => {
+export const saveAnswers = async (payload) => {
 	try {
-		const res = await axios.post(apiEndpoints.save_form, payload)
+		const res = await axios.post(apiEndpoints.save_answers, payload)
+		return res.data
+	} catch (error) {
+		console.log(error.message);
+		return null
+	}
+}
+
+export const saveMultipleAnswers = async (payload) => {
+	try {
+		const res = await axios.post(apiEndpoints.save_multiple_answers, payload)
 		return res.data
 	} catch (error) {
 		console.log(error.message);
@@ -43,7 +53,17 @@ export const getTopicList = async () => {
 
 export const getTopicDetailsById = async (payload) => {
 	try {
-		const res = await axios.get(apiEndpoints.topic_details_by_id + `/${payload}`)
+		const res = await axios.get(apiEndpoints.topic_details_by_id + payload)
+		return res.data
+	} catch (error) {
+		console.log(error.message);
+		return null
+	}
+}
+
+export const getTopicQuestionsById = async (payload) => {
+	try {
+		const res = await axios.get(apiEndpoints.topic_questions_by_id + payload)
 		return res.data
 	} catch (error) {
 		console.log(error.message);

@@ -3,7 +3,9 @@ const baseUrl = "http://localhost:1111/api"
 export const apiEndpoints = {
 	create_form: baseUrl + "/create",
 	get_form: baseUrl + "/fetch",
-	save_form: baseUrl + "/answer/save",
+	save_answers: baseUrl + "/answer/save",
+	save_multiple_answers: baseUrl + "/answer/multiple-save",
 	topic_list: baseUrl + "/topic/list",
-	topic_details_by_id: baseUrl + "/topic/details",
+	topic_questions_by_id: baseUrl + '/topic/',
+	topic_details_by_id: baseUrl + "/topic/details/",
 }

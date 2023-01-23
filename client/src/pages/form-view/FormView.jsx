@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getForm, saveForm } from "../../api/apiRequest";
+import { getForm, saveAnswers } from "../../api/apiRequest";
 import "./formview.css";
 
 export default function FormView() {
@@ -54,7 +54,7 @@ export default function FormView() {
             topic_id: topicId,
             json_data: JSON.stringify(forms)
         }
-        const res = await saveForm(payload)
+        const res = await saveAnswers(payload)
         
         if(res.flag === 'SUCCESS'){
             navigate("/thank-you", { state: { from: params.url } })
