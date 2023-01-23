@@ -6,8 +6,8 @@ const morgan = require("morgan")
 const app = express();
 app.use(morgan("tiny"))
 app.use(cors({ origin: "*" }));
-app.use(express.json({ extended: true }))
-app.use(express.urlencoded({ extended: true }))
+app.use(express.json({ extended: true, limit: "512MB" }))
+app.use(express.urlencoded({ extended: true, limit: "512MB" }))
 
 const db = mysql.createConnection({
     host: "localhost",
@@ -90,6 +90,26 @@ app.get("/api/topic/list", (req, res) => {
     })
 })
 
+app.get("/api/topic/:id", (req, res) => {
+    const id = req.params.id
+
+    const sql = "SELECT questions FROM forms WHERE id = ?"
+
+    db.query(sql, id, (err, result) => {
+        if(err){
+            console.log("❌ Error:", err.message);
+            return res.send({
+                flag: "FAIL",
+                message: "Something went wrong"
+            });
+        }
+
+        if(result){
+            return res.send(result)
+        }
+    })
+})
+
 app.get("/api/topic/details/:id", (req, res) => {
     const { id } = req.params
     
@@ -116,6 +136,30 @@ app.post("/api/answer/save", (req, res) => {
     const sql = "INSERT INTO answers(topic_id, answer) VALUES (?, ?)";
 
     db.query(sql, [topic_id, json_data], (err, result) => {
+        if (err) {
+            console.log("❌ Error:", err.message);
+            return res.send({
+                flag: "FAIL",
+                message: "Something went wrong"
+            });
+        }
+
+        if (result.affectedRows > 0 && result.insertId !== null) {
+			console.log(result);
+            return res.send({
+                flag: "SUCCESS",
+                message: "Inserted Successfully"
+            });
+        }
+    });
+});
+
+app.post("/api/answer/multiple-save", (req, res) => {
+    const { data } = req.body;
+
+    const sql = "INSERT INTO answers(topic_id, answer) VALUES ?";
+
+    db.query(sql, [data], (err, result) => {
         if (err) {
             console.log("❌ Error:", err.message);
             return res.send({
