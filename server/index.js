@@ -10,6 +10,7 @@ app.use(express.json({ extended: true, limit: "512MB" }))
 app.use(express.urlencoded({ extended: true, limit: "512MB" }))
 
 const db = mysql.createConnection({
+    // connectionLimit: 5,
     host: "localhost",
     user: "root",
     password: "",
@@ -130,6 +131,63 @@ app.get("/api/topic/details/:id", (req, res) => {
     })
 })
 
+app.get("/api/topic/details-paginated/:id/:cursor", (req, res) => {
+    const id = req.params.id
+    const cursor = req.params?.cursor || 0
+    const LIMIT = 50
+    let totalResponses = 0
+    let sql
+
+    sql = `
+        SELECT COUNT(*) AS total FROM answers
+        WHERE topic_id = ?
+    `
+
+    db.query(sql, id, (err, result) => {
+        if(err){
+            console.log("❌ Error:", err.message);
+            return res.send({
+                flag: "FAIL",
+                message: "Something went wrong"
+            });
+        }
+
+        totalResponses = result[0].total
+    })
+
+    if(cursor > totalResponses){
+        return res.send({
+            result: [],
+            next: -1,
+            total: totalResponses
+        })
+    }
+    
+    sql = `
+        SELECT * FROM answers 
+        WHERE topic_id = ?
+        LIMIT ?,?
+    `
+
+    db.query(sql, [id, parseInt(cursor), parseInt(LIMIT)], (err, result) => {
+        if(err){
+            console.log("❌ Error:", err.message);
+            return res.send({
+                flag: "FAIL",
+                message: "Something went wrong"
+            });
+        }
+
+        if(result){
+            return res.send({
+                result,
+                next: LIMIT > totalResponses ? -1 : parseInt(LIMIT) + parseInt(cursor),
+                total: totalResponses
+            })
+        }
+    })
+})
+
 app.post("/api/answer/save", (req, res) => {
     const { topic_id, json_data } = req.body;
 
@@ -172,7 +230,8 @@ app.post("/api/answer/multiple-save", (req, res) => {
 			console.log(result);
             return res.send({
                 flag: "SUCCESS",
-                message: "Inserted Successfully"
+                message: `${result.affectedRows} Data Inserted Successfully`,
+                inserted: result.affectedRows
             });
         }
     });
