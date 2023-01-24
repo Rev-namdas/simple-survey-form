@@ -8,4 +8,5 @@ export const apiEndpoints = {
 	topic_list: baseUrl + "/topic/list",
 	topic_questions_by_id: baseUrl + '/topic/',
 	topic_details_by_id: baseUrl + "/topic/details/",
+	topic_details_by_id_page: baseUrl + "/topic/details-paginated/",
 }

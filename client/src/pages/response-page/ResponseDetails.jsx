@@ -1,32 +1,49 @@
 import React, { useEffect, useState } from "react";
 import { useRef } from "react";
 import { useLocation, useParams } from "react-router-dom";
-import { getTopicDetailsById, getTopicQuestionsById, saveMultipleAnswers } from "../../api/apiRequest";
+import { getTopicDetailsByIdPage, getTopicQuestionsById, saveMultipleAnswers } from "../../api/apiRequest";
 import * as xlsx from "xlsx"
 
 export default function ResponseDetails() {
     const params = useParams();
 	const { state: { topic } } = useLocation()
     const [responseList, setResponseList] = useState([]);
+    const [responseLength, setResponseLength] = useState(0)
     const [questions, setQuestions] = useState([])
     const [excelResponses, setExcelResponses] = useState([])
     const [uploadBtnDisable, setUploadBtnDisable] = useState(true)
+    const [isLoading, setIsLoading] = useState(false)
+    const [responseMsg, setResponseMsg] = useState("")
 	const checkIds = useRef([])
 
-    const fetchData = async () => {
-        const res = await getTopicDetailsById(params.id);
+    let totalInserted = 0
+    let cursor = 0
 
-        res.forEach((each) => {
+    const fetchResponses = async () => {
+        setIsLoading(true)
+        // const res = await getTopicDetailsById(params.id);
+        const payload = `${params.id}/${cursor}`
+        
+        const res = await getTopicDetailsByIdPage(payload);
+        cursor = res?.next || 0
+        setResponseLength(res?.total)
+
+        res?.result?.forEach((each) => {
             if (!checkIds.current.includes(each.id)) {
                 setResponseList((prev) => [...prev, JSON.parse(each?.answer)]);
 				// console.log('pushing', checkIds.current, each.id);
                 checkIds.current.push(each.id);
             }
         });
-
+        setIsLoading(false)
+    };
+    
+    const fetchQuestions = async () => {
+        setIsLoading(true)
         const ques = await getTopicQuestionsById(params.id)
         setQuestions(JSON.parse(ques[0]?.questions || {}))
-    };
+        setIsLoading(false)
+    }
 
     const handleFileUpload = (e) => {
 		e.preventDefault()
@@ -50,24 +67,45 @@ export default function ResponseDetails() {
                     
                     setExcelResponses(prev => [...prev, jsonObj])
                 })
+                setUploadBtnDisable(false)
 			}
 
 			reader.readAsBinaryString(e.target.files[0])
-            setUploadBtnDisable(false)
 		}
 	}
 
     const handleUploadBtn = async () => {
+        setResponseMsg("Processing...")
+        setUploadBtnDisable(true)
+
         const data = excelResponses.map(each => {
             return [parseInt(params.id), JSON.stringify(each)]
         })
 
-        const payload = { data }
+        const sliceUpto = 200
+        const maxLength = Math.ceil(data.length / sliceUpto)
+        let startFrom = 0
+        let endTo = sliceUpto
 
-        const res = await saveMultipleAnswers(payload)
-        
-        if(res.flag === 'FAIL') return alert('Something went wrong')
+        console.log('total', data.length);
+        console.log('len', maxLength);
+        for (let index = 0; index < maxLength; index++) {
+            const payload = { data: data.slice(startFrom, (data.length < endTo ? data.length : endTo)) }
+    
+            console.log('range', startFrom, (data.length < endTo ? data.length : endTo));
+            console.log(payload);
+            const res = await saveMultipleAnswers(payload)
+            
+            if(res.flag === 'FAIL') return alert('Something went wrong')
+            if(res.flag === 'SUCCESS') {
+                setResponseMsg(prev => prev += "...")
+                totalInserted += res.inserted
+            }
+            startFrom = endTo
+            endTo += sliceUpto
+        }
 
+        alert(`Total Inserted: ${totalInserted}`)
         window.location.reload()
     } 
 
@@ -79,7 +117,23 @@ export default function ResponseDetails() {
 
     useEffect(
         () => {
-            fetchData();
+            fetchResponses();
+            fetchQuestions();
+            
+            let fetching = false
+            async function trackScroll(e){
+                const {scrollHeight, scrollTop, clientHeight} = e.target.scrollingElement
+
+                if(cursor >= 0 && !fetching && (scrollHeight - scrollTop <= clientHeight)){
+                    fetching = true
+                    await fetchResponses()
+                    fetching = false
+                }
+            }
+
+            document.addEventListener('scroll', trackScroll)
+
+            return () => document.removeEventListener('scroll', trackScroll)
         },
         // eslint-disable-next-line
         []
@@ -93,10 +147,12 @@ export default function ResponseDetails() {
                 <input type="file" name="file" id="file" onChange={handleFileUpload} />
                 <button onClick={handleUploadBtn} disabled={uploadBtnDisable}>Upload</button>
             </div>
-            <button onClick={() => console.log(excelResponses)}>Print</button>
+            <button onClick={() => console.log(responseList)}>Print</button>
             <button onClick={handleDownloadExcel}>Download</button>
 
-            <div>Total: {responseList.length}</div>
+            <div>Total: {responseLength}</div>
+
+            {responseMsg.length > 0 && <div>{responseMsg}</div>}
 
             <table id="table-to-export">
                 <thead>
@@ -109,13 +165,15 @@ export default function ResponseDetails() {
                 <tbody>
                     {responseList?.map((eachResponse, index) => (
                         <tr key={index}>
-                            {eachResponse.map((each, index) => (
-                                <td key={index} style={{ padding: "0.4rem 1rem", minWidth: "15rem", backgroundColor: "white" }}>{each.answer}</td>
+                            {eachResponse.map((each, responseIndex) => (
+                                <td key={responseIndex} style={{ padding: "0.4rem 1rem", minWidth: "15rem", backgroundColor: "white" }}>{index + 1} {each.answer}</td>
                             ))}
                         </tr>
                     ))}
+                    {isLoading && <tr><div>Loading More...</div></tr>}
                 </tbody>
             </table>
+            <br />
         </>
     );
 }

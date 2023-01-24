@@ -61,6 +61,16 @@ export const getTopicDetailsById = async (payload) => {
 	}
 }
 
+export const getTopicDetailsByIdPage = async (payload) => {
+	try {
+		const res = await axios.get(apiEndpoints.topic_details_by_id_page + payload)
+		return res.data
+	} catch (error) {
+		console.log(error.message);
+		return null
+	}
+}
+
 export const getTopicQuestionsById = async (payload) => {
 	try {
 		const res = await axios.get(apiEndpoints.topic_questions_by_id + payload)
