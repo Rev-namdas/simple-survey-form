@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
 import FormCreate from './pages/form-create/FormCreate';
+import FormEdit from './pages/form-edit/FormEdit';
 import FormView from './pages/form-view/FormView';
 import HomePage from './pages/home-page/HomePage';
 import Error404page from './pages/message-page/Error404page';
@@ -15,6 +16,7 @@ function App() {
         <Route path='/' element={<HomePage />} />
         <Route path='/new/:url' element={<FormCreate />} />
         <Route path='/view/:url' element={<FormView />} />
+        <Route path='/edit/:url' element={<FormEdit />} />
         <Route path='/thank-you' element={<MessagePage />} />
         <Route path='/admin/responses' element={<ResponsePage />} />
         <Route path='/admin/responses/list/:id' element={<ResponseDetails />} />

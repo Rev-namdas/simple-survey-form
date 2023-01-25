@@ -11,6 +11,16 @@ export const createForm = async (payload) => {
 	}
 }
 
+export const updateForm = async (payload) => {
+	try {
+		const res = await axios.patch(apiEndpoints.update_form, payload)
+		return res.data
+	} catch (error) {
+		console.log(error.message);
+		return null
+	}
+}
+
 export const getForm = async (payload) => {
 	try {
 		const res = await axios.get(apiEndpoints.get_form + `/${payload}`)

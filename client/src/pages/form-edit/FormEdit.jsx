@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRef } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { createForm } from "../../api/apiRequest";
-import "./formcreate.css";
+import { getForm, updateForm } from "../../api/apiRequest";
+import "./formedit.css";
 
-export default function FormCreate() {
-    document.title = "Survey | Create"
+export default function FormEdit() {
+    document.title = "Survey | Edit"
 
     const initialForm = {
         id: 1,
@@ -19,8 +19,22 @@ export default function FormCreate() {
     const [rangeValue, setRangeValue] = useState(5)
     const navigate = useNavigate()
     const params = useParams()
-    const { state: { topic } } = useLocation()
+    const { state: { topic, topic_id } } = useLocation()
     const newOptionBtnRef = useRef()
+
+	useEffect(() => {
+		const fetchData = async () => {
+			const res = await getForm(topic)
+			
+			const ques = res?.questions 
+							? JSON.parse(res.questions)
+							: []
+			setForms(ques);
+		}
+
+		fetchData()
+	}, [topic])
+	
 
     const handleNewOption = (index) => {
         const updatedForms = [...forms]
@@ -75,14 +89,13 @@ export default function FormCreate() {
         }
     }
 
-    const handleSave = async () => {
+    const handleUpdate = async () => {
         const payload = {
-            topic_name: topic, 
-            url: params.url, 
+            topic_id: topic_id,
             json_data: JSON.stringify(forms)
         }
-        
-        const res = await createForm(payload)
+
+        const res = await updateForm(payload)
         
         if(res.flag === 'SUCCESS'){
             navigate("/view/" + params.url)
@@ -282,9 +295,7 @@ export default function FormCreate() {
                     </div>
                 </div>
             ))}
-            <button onClick={handleSave}>Save</button>
+            <button onClick={handleUpdate}>Update</button>
         </div>
     );
 }
-
-// https://codepen.io/liborgabrhel/pen/eyzwOx?editors=0110

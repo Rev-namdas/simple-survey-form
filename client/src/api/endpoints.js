@@ -2,6 +2,7 @@ const baseUrl = "http://localhost:1111/api"
 
 export const apiEndpoints = {
 	create_form: baseUrl + "/create",
+	update_form: baseUrl + "/update",
 	get_form: baseUrl + "/fetch",
 	save_answers: baseUrl + "/answer/save",
 	save_multiple_answers: baseUrl + "/answer/multiple-save",

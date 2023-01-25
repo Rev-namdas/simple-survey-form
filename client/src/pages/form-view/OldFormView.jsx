@@ -98,54 +98,147 @@ export default function FormView() {
                         id={`selection${index}`}
                         onChange={(e) => handleOptionChange(e, index)}
                     >
-                        <option defaultValue=""></option>
-                        {forms[index].option.map(each => (
-                            <option key={each} value={each}>
-                                {each}
-                            </option>
-                        ))}
+                        <option value={forms[index].options.option1}>
+                            {forms[index].options.option1}
+                        </option>
+                        <option value={forms[index].options.option2}>
+                            {forms[index].options.option2}
+                        </option>
+                        <option value={forms[index].options.option3}>
+                            {forms[index].options.option3}
+                        </option>
+                        <option value={forms[index].options.option4}>
+                            {forms[index].options.option4}
+                        </option>
                     </select>
                 </div>
             );
         } else if (item === 4) {
             return (
                 <div className="options-input-group">
-                    {forms[index].option.map((each, OptionIndex) => (
-                        <div key={each} className="options-input" onChange={(e) => handleOptionChange(e, index)}>
-                            <input
-                                type="radio"
-                                name={`radio${index}`}
-                                id={`radio${index}${OptionIndex}`}
-                                defaultValue={each}
-                            />
-                            <label htmlFor={`radio${index}${OptionIndex}`}>
-                                <div className="options-input-label">
-                                    {each}
-                                </div>
-                            </label>
-                        </div>
-                    ))}
+                    <div className="options-input">
+                        <input
+                            type="radio"
+                            name={`radio${index}`}
+                            id={`radio1${index}`}
+                            value={forms[index].options.option1}
+                            onChange={(e) => handleOptionChange(e, index)}
+                        />
+                        <label htmlFor={`radio1${index}`}>
+                            <div className="options-input-label">
+                                {forms[index].options.option1}
+                            </div>
+                        </label>
+                    </div>
+
+                    <div className="options-input">
+                        <input
+                            type="radio"
+                            name={`radio${index}`}
+                            id={`radio2${index}`}
+                            value={forms[index].options.option2}
+                            onChange={(e) => handleOptionChange(e, index)}
+                        />
+                        <label htmlFor={`radio2${index}`}>
+                            <div className="options-input-label">
+                                {forms[index].options.option2}
+                            </div>
+                        </label>
+                    </div>
+
+                    <div className="options-input">
+                        <input
+                            type="radio"
+                            name={`radio${index}`}
+                            id={`radio3${index}`}
+                            value={forms[index].options.option3}
+                            onChange={(e) => handleOptionChange(e, index)}
+                        />
+                        <label htmlFor={`radio3${index}`}>
+                            <div className="options-input-label">
+                                {forms[index].options.option3}
+                            </div>
+                        </label>
+                    </div>
+
+                    <div className="options-input">
+                        <input
+                            type="radio"
+                            name={`radio${index}`}
+                            id={`radio4${index}`}
+                            value={forms[index].options.option4}
+                            onChange={(e) => handleOptionChange(e, index)}
+                        />
+                        <label htmlFor={`radio4${index}`}>
+                            <div className="options-input-label">
+                                {forms[index].options.option4}
+                            </div>
+                        </label>
+                    </div>
                 </div>
             );
         } else if (item === 5) {
             return (
                 <div className="options-input-group">
-                    {forms[index].option.map((each, optionIndex) => (
-                        <div key={each} className="options-input">
-                            <input
-                                type="checkbox"
-                                name={`checkbox${optionIndex}`}
-                                id={`checkbox${index}${optionIndex}`}
-                                value={each}
-                                onChange={(e) => handleOptionsChange(e, index)}
-                            />
-                            <label htmlFor={`checkbox${index}${optionIndex}`}>
-                                <div className="options-input-label">
-                                    {each}
-                                </div>
-                            </label>
-                        </div>
-                    ))}
+                    <div className="options-input">
+                        <input
+                            type="checkbox"
+                            name={`checkbox${index}`}
+                            id={`checkbox1${index}`}
+                            value={forms[index].options.option1}
+                            onChange={(e) => handleOptionsChange(e, index)}
+                        />
+                        <label htmlFor={`checkbox1${index}`}>
+                            <div className="options-input-label">
+                                {forms[index].options.option1}
+                            </div>
+                        </label>
+                    </div>
+
+                    <div className="options-input">
+                        <input
+                            type="checkbox"
+                            name={`checkbox${index}`}
+                            id={`checkbox2${index}`}
+                            value={forms[index].options.option2}
+                            onChange={(e) => handleOptionsChange(e, index)}
+                        />
+                        <label htmlFor={`checkbox2${index}`}>
+                            <div className="options-input-label">
+                                {forms[index].options.option2}
+                            </div>
+                        </label>
+                    </div>
+
+                    <div className="options-input">
+                        <input
+                            type="checkbox"
+                            name={`checkbox${index}`}
+                            id={`checkbox3${index}`}
+                            value={forms[index].options.option3}
+                            onChange={(e) => handleOptionsChange(e, index)}
+                        />
+                        <label htmlFor={`checkbox3${index}`}>
+                            <div className="options-input-label">
+                                {forms[index].options.option3}
+                            </div>
+                        </label>
+                    </div>
+
+                    <div className="options-input">
+                        <input
+                            type="checkbox"
+                            name={`checkbox${index}`}
+                            id={`checkbox4${index}`}
+                            value={forms[index].options.option4}
+                            onChange={(e) => handleOptionsChange(e, index)}
+                        />
+                        <label htmlFor={`checkbox4${index}`}>
+                            <div className="options-input-label">
+                                {forms[index].options.option4}
+                            </div>
+                        </label>
+                    </div>
                 </div>
             );
         } else if (item === 6) {

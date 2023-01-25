@@ -166,11 +166,11 @@ export default function ResponseDetails() {
                     {responseList?.map((eachResponse, index) => (
                         <tr key={index}>
                             {eachResponse.map((each, responseIndex) => (
-                                <td key={responseIndex} style={{ padding: "0.4rem 1rem", minWidth: "15rem", backgroundColor: "white" }}>{index + 1} {each.answer}</td>
+                                <td key={responseIndex} style={{ padding: "0.4rem 1rem", minWidth: "15rem", backgroundColor: "white" }}>{each.answer}</td>
                             ))}
                         </tr>
                     ))}
-                    {isLoading && <tr><div>Loading More...</div></tr>}
+                    {isLoading && <tr><div></div></tr>}
                 </tbody>
             </table>
             <br />

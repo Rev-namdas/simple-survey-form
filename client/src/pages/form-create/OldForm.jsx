@@ -1,17 +1,21 @@
 import React, { useState } from "react";
-import { useRef } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { createForm } from "../../api/apiRequest";
 import "./formcreate.css";
 
-export default function FormCreate() {
-    document.title = "Survey | Create"
+export default function OldForm() {
+    document.title = "Demo Survey | Create"
 
     const initialForm = {
         id: 1,
         question: "",
         inputType: 1,
-        option: [''],
+        options: {
+            option1: "",
+            option2: "",
+            option3: "",
+            option4: "",
+        },
         answer: ""
     };
 
@@ -20,21 +24,6 @@ export default function FormCreate() {
     const navigate = useNavigate()
     const params = useParams()
     const { state: { topic } } = useLocation()
-    const newOptionBtnRef = useRef()
-
-    const handleNewOption = (index) => {
-        const updatedForms = [...forms]
-        updatedForms[index].option.push('')
-
-        setForms(updatedForms)
-    }
-
-    const handleRemoveOption = (formIndex, optionIndex) => {
-        const updated = [...forms]
-
-        updated[formIndex].option.splice(optionIndex, 1)
-        setForms(updated)
-    }
 
     const handleNewQuestion = () => {
         const newContent = { ...initialForm };
@@ -62,18 +51,12 @@ export default function FormCreate() {
         setForms(updatedForm);
     };
 
-    const handleOptionChange = (e, formIndex, optionIndex) => {
-        const updatedFrom = [...forms]
-        updatedFrom[formIndex].option[optionIndex] = e.target.value
+    const handleOptionChange = (e, index) => {
+        const update = [...forms];
+        update[index]["options"][e.target.name] = e.target.value;
 
-        setForms(updatedFrom)
-    }
-
-    const handleKeyDownForNextOption = (e) => {
-        if(e.which === 13){
-            newOptionBtnRef.current.click()
-        }
-    }
+        setForms(update);
+    };
 
     const handleSave = async () => {
         const payload = {
@@ -98,8 +81,9 @@ export default function FormCreate() {
                         className="form__answer-input"
                         autoComplete="off"
                         type="text"
-                        value={forms[index].option[0]}
-                        onChange={(e) => handleOptionChange(e, index, 0)}
+                        name="option1"
+                        value={forms[index].options.option1}
+                        onChange={(e) => handleOptionChange(e, index)}
                     />
                 </div>
             );
@@ -113,70 +97,52 @@ export default function FormCreate() {
                         id="textarea"
                         cols="30"
                         rows="3"
-                        value={forms[index].option[0]}
-                        onChange={(e) => handleOptionChange(e, index, 0)}
+                        name="option1"
+                        value={forms[index].options.option1}
+                        onChange={(e) => handleOptionChange(e, index)}
                     ></textarea>
                 </div>
             );
         } else if (item === 3 || item === 4 || item === 5) {
             return (
-                <div>
-                    {forms[index].option.map((each, indexForKey) => (
-                        <div key={indexForKey}>
-                            <input 
-                                type="text" 
-                                value={each} 
-                                onKeyDown={handleKeyDownForNextOption}
-                                onChange={(e) => handleOptionChange(e, index, indexForKey)} 
-                                style={{ width: "92%" }} 
-                            />
-                            <button 
-                                onClick={() => handleRemoveOption(index, indexForKey)}
-                            >
-                                X
-                            </button>
-                        </div>
-                    ))}
-                    <button ref={newOptionBtnRef} onClick={() => handleNewOption(index)}>Add Option</button>
+                <div className="form__answer">
+                    <input
+                        placeholder="1st Option"
+                        className="form__answer-input"
+                        type="text"
+                        autoComplete="off"
+                        name="option1"
+                        value={forms[index].options.option1}
+                        onChange={(e) => handleOptionChange(e, index)}
+                    />
+                    <input
+                        placeholder="2nd Option"
+                        className="form__answer-input"
+                        type="text"
+                        autoComplete="off"
+                        name="option2"
+                        value={forms[index].options.option2}
+                        onChange={(e) => handleOptionChange(e, index)}
+                    />
+                    <input
+                        placeholder="3rd Option"
+                        className="form__answer-input"
+                        type="text"
+                        autoComplete="off"
+                        name="option3"
+                        value={forms[index].options.option3}
+                        onChange={(e) => handleOptionChange(e, index)}
+                    />
+                    <input
+                        placeholder="4th Option"
+                        className="form__answer-input"
+                        type="text"
+                        autoComplete="off"
+                        name="option4"
+                        value={forms[index].options.option4}
+                        onChange={(e) => handleOptionChange(e, index)}
+                    />
                 </div>
-                // <div className="form__answer">
-                //     <input
-                //         placeholder="1st Option"
-                //         className="form__answer-input"
-                //         type="text"
-                //         autoComplete="off"
-                //         name="option1"
-                //         value={forms[index].options.option1}
-                //         onChange={(e) => handleOptionChange(e, index)}
-                //     />
-                //     <input
-                //         placeholder="2nd Option"
-                //         className="form__answer-input"
-                //         type="text"
-                //         autoComplete="off"
-                //         name="option2"
-                //         value={forms[index].options.option2}
-                //         onChange={(e) => handleOptionChange(e, index)}
-                //     />
-                //     <input
-                //         placeholder="3rd Option"
-                //         className="form__answer-input"
-                //         type="text"
-                //         autoComplete="off"
-                //         name="option3"
-                //         value={forms[index].options.option3}
-                //         onChange={(e) => handleOptionChange(e, index)}
-                //     />
-                //     <input
-                //         placeholder="4th Option"
-                //         className="form__answer-input"
-                //         type="text"
-                //         autoComplete="off"
-                //         name="option4"
-                //         value={forms[index].options.option4}
-                //         onChange={(e) => handleOptionChange(e, index)}
-                //     />
-                // </div>
             );
         } else if (item === 6) {
             return (

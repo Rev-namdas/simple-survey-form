@@ -60,7 +60,6 @@
 
 .options-input{
 	flex: 1;
-	flex-grow: 0;
 	min-width: max-content;
 	min-height: 3rem;
 	line-height: 3rem;
