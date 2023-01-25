@@ -56,6 +56,30 @@ app.post("/api/create", (req, res) => {
     });
 });
 
+app.patch("/api/update", (req, res) => {
+    const { topic_id, json_data } = req.body;
+
+    const sql = "UPDATE forms SET questions = ? WHERE id = ?";
+
+    db.query(sql, [json_data, topic_id], (err, result) => {
+        if (err) {
+            console.log("❌ Error:", err.message);
+            return res.send({
+                flag: "FAIL",
+                message: "Something went wrong"
+            });
+        }
+
+        if (result.affectedRows > 0 && result.insertId !== null) {
+			console.log(result);
+            return res.send({
+                flag: "SUCCESS",
+                message: "Update Successfully"
+            });
+        }
+    });
+});
+
 app.get("/api/fetch/:name", (req, res) => {
     const { name } = req.params;
 
@@ -153,15 +177,16 @@ app.get("/api/topic/details-paginated/:id/:cursor", (req, res) => {
         }
 
         totalResponses = result[0].total
+
+        if(cursor > totalResponses){
+            return res.send({
+                result: [],
+                next: -1,
+                total: totalResponses
+            })
+        }
     })
 
-    if(cursor > totalResponses){
-        return res.send({
-            result: [],
-            next: -1,
-            total: totalResponses
-        })
-    }
     
     sql = `
         SELECT * FROM answers 
@@ -178,10 +203,12 @@ app.get("/api/topic/details-paginated/:id/:cursor", (req, res) => {
             });
         }
 
+        const nextCursor = parseInt(LIMIT) + parseInt(cursor)
+
         if(result){
             return res.send({
                 result,
-                next: LIMIT > totalResponses ? -1 : parseInt(LIMIT) + parseInt(cursor),
+                next: nextCursor > totalResponses ? -1 : nextCursor,
                 total: totalResponses
             })
         }
