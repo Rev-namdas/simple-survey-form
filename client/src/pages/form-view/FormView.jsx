@@ -9,6 +9,7 @@ export default function FormView() {
     const params = useParams()
     const navigate = useNavigate()
     const [forms, setForms] = useState([]);
+    const [answers, setAnswers] = useState([])
     const [rangeValue, setRangeValue] = useState(5)
     const [topicId, setTopicId] = useState(0);
 
@@ -18,8 +19,15 @@ export default function FormView() {
         const ques = res?.questions 
                         ? JSON.parse(res.questions)
                         : []
+        
         setForms(ques);
         setTopicId(res?.id || 0)
+
+        const formAnswers = ques.map(each => {
+            return { id: each.id, answer: "" }
+        })
+
+        setAnswers(formAnswers)
     }
 
     useEffect(
@@ -31,14 +39,14 @@ export default function FormView() {
     );
 
     const handleOptionChange = (e, index) => {
-        const update = [...forms];
+        const update = [...answers];
         update[index]["answer"] = e.target.value;
 
-        setForms(update);
+        setAnswers(update);
     };
 
     const handleOptionsChange = (e, index) => {
-        const update = [...forms];
+        const update = [...answers];
         
         if((update[index]["answer"]).length > 1){
             update[index]["answer"] += ", " + e.target.value;
@@ -46,13 +54,13 @@ export default function FormView() {
             update[index]["answer"] += e.target.value;
         }
 
-        setForms(update);
+        setAnswers(update);
     };
 
     const handleSubmit = async () => {
         const payload = {
             topic_id: topicId,
-            json_data: JSON.stringify(forms)
+            json_data: JSON.stringify(answers)
         }
         const res = await saveAnswers(payload)
         
@@ -70,7 +78,7 @@ export default function FormView() {
                         autoComplete="off"
                         className="answer-input"
                         name="option1"
-                        value={forms[index]["answer"]}
+                        value={answers[index]["answer"]}
                         onChange={(e) => handleOptionChange(e, index)}
                     />
                 </div>
@@ -84,7 +92,7 @@ export default function FormView() {
                         cols="42"
                         rows="4"
                         name="option1"
-                        value={forms[index]["answer"]}
+                        value={answers[index]["answer"]}
                         onChange={(e) => handleOptionChange(e, index)}
                     ></textarea>
                 </div>

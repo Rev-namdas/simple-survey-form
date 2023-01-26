@@ -11,8 +11,7 @@ export default function FormCreate() {
         id: 1,
         question: "",
         inputType: 1,
-        option: [''],
-        answer: ""
+        option: ['']
     };
 
     const [forms, setForms] = useState([initialForm]);
@@ -69,8 +68,24 @@ export default function FormCreate() {
         setForms(updatedFrom)
     }
 
-    const handleKeyDownForNextOption = (e) => {
+    const handleKeyDownForNextOption = (e, formIndex) => {
         if(e.which === 13){
+            navigator.clipboard.readText()
+            .then(data => {
+                const extraFieldNeeded = (data.split("\n").length - 1)
+                for (let index = 0; index < extraFieldNeeded; index++) {
+                    newOptionBtnRef.current.click()
+                }
+
+                const updatedFrom = [...forms]
+
+                data.split("\n").forEach((each, index) => {
+                    updatedFrom[formIndex].option[index] = each
+                })
+
+                setForms(updatedFrom)
+            });
+        } else if(e.which === 40){
             newOptionBtnRef.current.click()
         }
     }
@@ -121,17 +136,17 @@ export default function FormCreate() {
         } else if (item === 3 || item === 4 || item === 5) {
             return (
                 <div>
-                    {forms[index].option.map((each, indexForKey) => (
-                        <div key={indexForKey}>
-                            <input 
+                    {forms[index].option.map((each, optionIndex) => (
+                        <div key={optionIndex}>
+                            <input
                                 type="text" 
                                 value={each} 
-                                onKeyDown={handleKeyDownForNextOption}
-                                onChange={(e) => handleOptionChange(e, index, indexForKey)} 
+                                onKeyDown={(e) => handleKeyDownForNextOption(e, index)}
+                                onChange={(e) => handleOptionChange(e, index, optionIndex)} 
                                 style={{ width: "92%" }} 
                             />
                             <button 
-                                onClick={() => handleRemoveOption(index, indexForKey)}
+                                onClick={() => handleRemoveOption(index, optionIndex)}
                             >
                                 X
                             </button>

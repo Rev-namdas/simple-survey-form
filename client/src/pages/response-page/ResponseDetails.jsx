@@ -31,7 +31,6 @@ export default function ResponseDetails() {
         res?.result?.forEach((each) => {
             if (!checkIds.current.includes(each.id)) {
                 setResponseList((prev) => [...prev, JSON.parse(each?.answer)]);
-				// console.log('pushing', checkIds.current, each.id);
                 checkIds.current.push(each.id);
             }
         });
@@ -79,7 +78,9 @@ export default function ResponseDetails() {
         setUploadBtnDisable(true)
 
         const data = excelResponses.map(each => {
-            return [parseInt(params.id), JSON.stringify(each)]
+            return [parseInt(params.id), JSON.stringify(each.map(eachRow => (
+                { id: eachRow.id, answer: eachRow.answer }
+            )))]
         })
 
         const sliceUpto = 200
@@ -87,13 +88,9 @@ export default function ResponseDetails() {
         let startFrom = 0
         let endTo = sliceUpto
 
-        console.log('total', data.length);
-        console.log('len', maxLength);
         for (let index = 0; index < maxLength; index++) {
             const payload = { data: data.slice(startFrom, (data.length < endTo ? data.length : endTo)) }
-    
-            console.log('range', startFrom, (data.length < endTo ? data.length : endTo));
-            console.log(payload);
+
             const res = await saveMultipleAnswers(payload)
             
             if(res.flag === 'FAIL') return alert('Something went wrong')
@@ -147,7 +144,7 @@ export default function ResponseDetails() {
                 <input type="file" name="file" id="file" onChange={handleFileUpload} />
                 <button onClick={handleUploadBtn} disabled={uploadBtnDisable}>Upload</button>
             </div>
-            <button onClick={() => console.log(responseList)}>Print</button>
+            <button onClick={() => console.log(questions)}>Print</button>
             <button onClick={handleDownloadExcel}>Download</button>
 
             <div>Total: {responseLength}</div>
@@ -157,14 +154,21 @@ export default function ResponseDetails() {
             <table id="table-to-export">
                 <thead>
                     <tr>
-                        {responseList[0]?.map((each, index) => (
-                            <th key={index} style={{ padding: "0.4rem 1rem", minWidth: "15rem", backgroundColor: "white" }}>{each.question}</th>
+                        <th style={{ padding: "0.4rem 1rem", minWidth: "3rem", backgroundColor: "white" }}>Sl</th>
+                        {questions.map((each, quesIndex) => (
+                            <th 
+                                key={quesIndex}
+                                style={{ padding: "0.4rem 1rem", minWidth: "15rem", backgroundColor: "white" }}
+                            >
+                                {each.question}
+                            </th>
                         ))}
                     </tr>
                 </thead>
                 <tbody>
                     {responseList?.map((eachResponse, index) => (
                         <tr key={index}>
+                            <td style={{ padding: "0.4rem 1rem", minWidth: "3rem", backgroundColor: "white", textAlign: "center" }}>{ index + 1 }</td>
                             {eachResponse.map((each, responseIndex) => (
                                 <td key={responseIndex} style={{ padding: "0.4rem 1rem", minWidth: "15rem", backgroundColor: "white" }}>{each.answer}</td>
                             ))}
