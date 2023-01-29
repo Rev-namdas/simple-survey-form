@@ -20,6 +20,8 @@ export default function FormCreate() {
     const params = useParams()
     const { state: { topic } } = useLocation()
     const newOptionBtnRef = useRef()
+    let draggedItemIndex = useRef()
+    let draggedOverItemIndex = useRef()
 
     const handleNewOption = (index) => {
         const updatedForms = [...forms]
@@ -36,8 +38,11 @@ export default function FormCreate() {
     }
 
     const handleNewQuestion = () => {
+        const ids = forms.map(each => each.id)
+        ids.sort((a,b) => a - b)
+        
         const newContent = { ...initialForm };
-        newContent.id = forms[forms.length - 1].id + 1;
+        newContent.id = ids[ids.length - 1] + 1;
         setForms((prev) => [...prev, newContent]);
     };
 
@@ -110,7 +115,7 @@ export default function FormCreate() {
                 <div className="form__answer">
                     <input
                         placeholder="Short Answer"
-                        className="form__answer-input"
+                        className="form__group-input"
                         autoComplete="off"
                         type="text"
                         value={forms[index].option[0]}
@@ -123,7 +128,7 @@ export default function FormCreate() {
                 <div className="form__answer">
                     <textarea
                         placeholder="Detail Answer"
-                        className="form__answer-input"
+                        className="form__group-textarea"
                         autoComplete="off"
                         id="textarea"
                         cols="30"
@@ -137,22 +142,26 @@ export default function FormCreate() {
             return (
                 <div>
                     {forms[index].option.map((each, optionIndex) => (
-                        <div key={optionIndex}>
+                        <div key={optionIndex} className="form__group-option">
                             <input
                                 type="text" 
                                 value={each} 
                                 onKeyDown={(e) => handleKeyDownForNextOption(e, index)}
-                                onChange={(e) => handleOptionChange(e, index, optionIndex)} 
-                                style={{ width: "92%" }} 
+                                onChange={(e) => handleOptionChange(e, index, optionIndex)}
                             />
                             <button 
+                                className="form__group-btn-remove"
                                 onClick={() => handleRemoveOption(index, optionIndex)}
                             >
                                 X
                             </button>
                         </div>
                     ))}
-                    <button ref={newOptionBtnRef} onClick={() => handleNewOption(index)}>Add Option</button>
+                    <button 
+                        className="form__group-btn-add-option"
+                        ref={newOptionBtnRef} 
+                        onClick={() => handleNewOption(index)}
+                    >Add Option</button>
                 </div>
                 // <div className="form__answer">
                 //     <input
@@ -243,10 +252,30 @@ export default function FormCreate() {
         }
     };
 
+    const handleDragAndSort = () => {
+        const updated = [...forms]
+
+        const draggedItem = updated.splice(draggedItemIndex.current, 1)[0]
+        updated.splice(draggedOverItemIndex.current, 0, draggedItem)
+
+        setForms(updated)
+
+        draggedItemIndex.current = null
+        draggedOverItemIndex.current = null
+    }
+
     return (
         <div className="form__container">
+            <h3>Topic: { topic }</h3>
             {forms.map((each, index) => (
-                <div key={index} className="form__box">
+                <div 
+                    key={index} 
+                    className="form__box" 
+                    draggable 
+                    onDragStart={() => draggedItemIndex.current = index}
+                    onDragEnter={() => draggedOverItemIndex.current = index}
+                    onDragEnd={handleDragAndSort}
+                >
                     <div className="form__box-container">
                         <div>
                             <div className="form__header">
@@ -287,8 +316,12 @@ export default function FormCreate() {
                         </div>
 
                         <div className="form__box-btn-group">
-                            <button onClick={handleNewQuestion}>Add</button>
+                            <button 
+                                className="formcreate__btn formcreate__btn-add"
+                                onClick={handleNewQuestion}
+                            >Add</button>
                             <button
+                                className="formcreate__btn formcreate__btn-delete"
                                 onClick={() => handleDeleteQuestion(each.id)}
                             >
                                 Delete
@@ -297,7 +330,7 @@ export default function FormCreate() {
                     </div>
                 </div>
             ))}
-            <button onClick={handleSave}>Save</button>
+            <button className="formcreate__btn formcreate__btn-save" onClick={handleSave}>Save</button>
         </div>
     );
 }

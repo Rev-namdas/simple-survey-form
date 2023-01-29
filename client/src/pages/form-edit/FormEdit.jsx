@@ -21,6 +21,8 @@ export default function FormEdit() {
     const params = useParams()
     const { state: { topic, topic_id } } = useLocation()
     const newOptionBtnRef = useRef()
+    let draggedItemIndex = useRef()
+    let draggedOverItemIndex = useRef()
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -51,8 +53,11 @@ export default function FormEdit() {
     }
 
     const handleNewQuestion = () => {
+        const ids = forms.map(each => each.id)
+        ids.sort((a, b) => a - b)
+        
         const newContent = { ...initialForm };
-        newContent.id = forms[forms.length - 1].id + 1;
+        newContent.id = ids[ids.length - 1] + 1;
         setForms((prev) => [...prev, newContent]);
     };
 
@@ -83,8 +88,24 @@ export default function FormEdit() {
         setForms(updatedFrom)
     }
 
-    const handleKeyDownForNextOption = (e) => {
+    const handleKeyDownForNextOption = (e, formIndex) => {
         if(e.which === 13){
+            navigator.clipboard.readText()
+            .then(data => {
+                const extraFieldNeeded = (data.split("\n").length - 1)
+                for (let index = 0; index < extraFieldNeeded; index++) {
+                    newOptionBtnRef.current.click()
+                }
+
+                const updatedFrom = [...forms]
+
+                data.split("\n").forEach((each, index) => {
+                    updatedFrom[formIndex].option[index] = each
+                })
+
+                setForms(updatedFrom)
+            });
+        } else if(e.which === 40){
             newOptionBtnRef.current.click()
         }
     }
@@ -139,7 +160,7 @@ export default function FormEdit() {
                             <input 
                                 type="text" 
                                 value={each} 
-                                onKeyDown={handleKeyDownForNextOption}
+                                onKeyDown={(e) => handleKeyDownForNextOption(e, index)}
                                 onChange={(e) => handleOptionChange(e, index, indexForKey)} 
                                 style={{ width: "92%" }} 
                             />
@@ -241,10 +262,29 @@ export default function FormEdit() {
         }
     };
 
+    const handleDragAndSort = () => {
+        const updated = [...forms]
+
+        const draggedItem = updated.splice(draggedItemIndex.current, 1)[0]
+        updated.splice(draggedOverItemIndex.current, 0, draggedItem)
+
+        setForms(updated)
+
+        draggedItemIndex.current = null
+        draggedOverItemIndex.current = null
+    }
+
     return (
         <div className="form__container">
             {forms.map((each, index) => (
-                <div key={index} className="form__box">
+                <div 
+                    key={index} 
+                    className="form__box"
+                    draggable
+                    onDragStart={() => draggedItemIndex.current = index}
+                    onDragEnter={() => draggedOverItemIndex.current = index}
+                    onDragEnd={handleDragAndSort}
+                >
                     <div className="form__box-container">
                         <div>
                             <div className="form__header">

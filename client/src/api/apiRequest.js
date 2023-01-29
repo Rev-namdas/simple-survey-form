@@ -1,6 +1,16 @@
 import axios from "axios"
 import { apiEndpoints } from "./endpoints"
 
+export const checkUrlExists = async (payload) => {
+	try {
+		const res = await axios.post(apiEndpoints.check_url, payload)
+		return res.data
+	} catch (error) {
+		console.log(error.message);
+		return null
+	}
+}
+
 export const createForm = async (payload) => {
 	try {
 		const res = await axios.post(apiEndpoints.create_form, payload)

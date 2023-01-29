@@ -312,7 +312,7 @@ export default function FormView() {
             {forms.map((each, index) => (
                 <div key={index} className="question__box">
                     <span className="question-title">
-                        {each.id}. {forms[index].question}
+                        {index + 1}. {forms[index].question}
                     </span>
                     {selectedField(each.inputType, index)}
                 </div>

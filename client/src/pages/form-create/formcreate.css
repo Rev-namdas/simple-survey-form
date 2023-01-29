@@ -19,6 +19,11 @@
 	background-color: white;
 	box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.5);
 	border-radius: 0.3rem;
+	cursor: grab;
+}
+
+.form__box:active{
+	cursor: grabbing;
 }
 
 .form__header{
@@ -41,6 +46,55 @@
 	flex-wrap: wrap;
 	gap: var(--space);
 	margin: 1rem 0;
+}
+
+.form__group-input{
+	height: 1.5rem;
+	width: 100%;
+}
+
+.form__group-textarea{
+	width: 100%;
+}
+
+.form__group-option{
+	display: grid;
+	grid-template-columns: 1fr auto;
+	gap: 0.3rem;
+	margin-top: 0.5rem;
+	height: 2rem;
+}
+
+.form__group-option > input{
+	padding-left: 0.5rem;
+}
+
+
+.form__group-btn-remove{
+	border: none;
+	outline: none;
+	background-color: #e43838;
+	color: white;
+	cursor: pointer;
+}
+
+.form__group-btn-remove:hover{
+	background-color: #c51a1a;
+}
+
+.form__group-btn-add-option{
+	border: none;
+	outline: none;
+	background-color: #1F8A70;
+	color: white;
+	padding: 0.3rem 0.5rem;
+	margin-top: 0.5rem;
+	cursor: pointer;
+	border-radius: 0.2rem;
+}
+
+.form__group-btn-add-option:hover{
+	background-color: #0e745a;
 }
 
 .form__answer-input{
@@ -109,4 +163,37 @@
 	font-weight: bold;
 	line-height: 2rem;
 	border-radius: 50%;
+}
+
+.formcreate__btn{
+	border: none;
+	outline: none;
+	color: white;
+	padding: 0.5rem 1rem;
+	border-radius: 0.2rem;
+	cursor: pointer;
+}
+
+.formcreate__btn-add{
+	background-color: #009249;
+}
+
+.formcreate__btn-add:hover{
+	background-color: #00743a;
+}
+
+.formcreate__btn-delete{
+	background-color: #9e0000;
+}
+
+.formcreate__btn-delete:hover{
+	background-color: #830101;
+}
+
+.formcreate__btn-save{
+	background-color: #006da8;
+}
+
+.formcreate__btn-save:hover{
+	background-color: #005c8d;
 }

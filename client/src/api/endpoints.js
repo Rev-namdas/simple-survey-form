@@ -1,6 +1,7 @@
 const baseUrl = "http://localhost:1111/api"
 
 export const apiEndpoints = {
+	check_url: baseUrl + "/check-topic-exists",
 	create_form: baseUrl + "/create",
 	update_form: baseUrl + "/update",
 	get_form: baseUrl + "/fetch",

@@ -1,0 +1,44 @@
+.homepage__title{
+	text-align: center;
+	color: #4684b8;
+}
+
+.homepage__wrapper{
+	background-color: #fff;
+	box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2);
+	border-radius: 0.2rem;
+	height: 10rem;
+	width: 60vw;
+	margin: auto;
+	margin-top: 2rem;
+	padding: 1rem;
+}
+
+.homapage__input-group{
+	display: grid;
+	gap: 0.5rem;
+	margin-bottom: 1rem;
+}
+
+.homepage__input{
+	height: 2rem;
+	padding: 0 0.5rem;
+}
+
+.homapage__url{
+	display: grid;
+	grid-template-columns: 2fr 1fr;
+	gap: 1rem;
+}
+
+.homapage__btn{
+	border: none;
+	background-color: #5B8FB9;
+	color: white;
+	cursor: pointer;
+	border-radius: 0.2rem;
+}
+
+.homapage__btn:hover{
+	background-color: #4684b8;
+}
