@@ -80,6 +80,28 @@ app.patch("/api/update", (req, res) => {
     });
 });
 
+app.post("/api/check-topic-exists", (req, res) => {
+    const { url } = req.body
+
+    const sql = `SELECT id FROM forms WHERE url LIKE ?`
+
+    db.query(sql, url, (err, result) => {
+        if(err){
+            console.log("❌ Error:", err.message);
+        }
+
+        if(result.length > 0){
+            return res.send({ flag: 'FAIL', msg: "Url Name Already Exists !" })
+        }
+
+        return res.send({
+            flag: 'SUCCESS',
+            msg: "You can proceed"
+        })
+    })
+
+})
+
 app.get("/api/fetch/:name", (req, res) => {
     const { name } = req.params;
 
