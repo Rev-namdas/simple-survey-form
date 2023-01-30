@@ -42,3 +42,7 @@
 .homapage__btn:hover{
 	background-color: #4684b8;
 }
+
+.homepage__container{
+	position: relative;
+}

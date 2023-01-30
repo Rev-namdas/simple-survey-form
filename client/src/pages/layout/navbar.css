@@ -1,0 +1,50 @@
+.navbar{
+	background-color: rgb(11, 120, 163);
+	height: 3rem;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	position: sticky;
+	top: 0;
+	left: 0;
+	padding: 0 0.5rem;
+}
+
+.navbar__logo-wrapper{
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+}
+
+.navbar__logo{
+	height: 2rem;
+}
+
+.navbar__title{
+	color: white;
+	font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+	font-weight: bold;
+	cursor: default;
+}
+
+.navbar__btn-wrapper{
+	display: flex;
+	align-items: center;
+	gap: 0.2rem;
+}
+
+.navbar__btn{
+	border: none;
+	background: none;
+	color: #fff;
+	font-weight: bold;
+	border-radius: 0.2rem;
+	padding: 0.5rem;
+	cursor: pointer;
+}
+
+.navbar__btn:hover{
+	background-color: #fff;
+	color: rgb(11, 120, 163);
+	box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.3);
+}

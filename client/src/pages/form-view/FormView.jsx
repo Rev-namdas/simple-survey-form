@@ -10,8 +10,9 @@ export default function FormView() {
     const navigate = useNavigate()
     const [forms, setForms] = useState([]);
     const [answers, setAnswers] = useState([])
-    const [rangeValue, setRangeValue] = useState(5)
+    const [rangeValue, setRangeValue] = useState(0)
     const [topicId, setTopicId] = useState(0);
+    const [topicName, setTopicName] = useState();
 
     const fetchData = async () => {
         const res = await getForm(params.url)
@@ -22,6 +23,7 @@ export default function FormView() {
         
         setForms(ques);
         setTopicId(res?.id || 0)
+        setTopicName(res?.topic || "");
 
         const formAnswers = ques.map(each => {
             return { id: each.id, answer: "" }
@@ -126,8 +128,8 @@ export default function FormView() {
                                 id={`radio${index}${OptionIndex}`}
                                 defaultValue={each}
                             />
-                            <label htmlFor={`radio${index}${OptionIndex}`}>
-                                <div className="options-input-label">
+                            <label className="options-input-label" htmlFor={`radio${index}${OptionIndex}`}>
+                                <div>
                                     {each}
                                 </div>
                             </label>
@@ -147,8 +149,8 @@ export default function FormView() {
                                 value={each}
                                 onChange={(e) => handleOptionsChange(e, index)}
                             />
-                            <label htmlFor={`checkbox${index}${optionIndex}`}>
-                                <div className="options-input-label">
+                            <label className="options-input-label" htmlFor={`checkbox${index}${optionIndex}`}>
+                                <div>
                                     {each}
                                 </div>
                             </label>
@@ -165,143 +167,15 @@ export default function FormView() {
                         className="form__slider"
                         name="range" 
                         id="range" 
-                        min={0}
-                        max={10}
+                        min={forms[index].option[0]}
+                        max={forms[index].option[1]}
+                        step={forms[index].option[2]}
                         value={rangeValue}
                         onChange={(e) => {
                             handleOptionChange(e, index)
                             setRangeValue(e.target.value)
                         }}
                     />
-                    {/* <div className="range-input-options">
-                        <input
-                            type="radio"
-                            name={`range${index}`}
-                            id={`range1${index}`}
-                            value="1"
-                            onChange={(e) => handleOptionChange(e, index)}
-                        />
-                        <label htmlFor={`range1${index}`}>
-                            <div className="range-input-label">1</div>
-                        </label>
-                    </div>
-
-                    <div className="range-input-options">
-                        <input
-                            type="radio"
-                            name={`range${index}`}
-                            id={`range2${index}`}
-                            value="2"
-                            onChange={(e) => handleOptionChange(e, index)}
-                        />
-                        <label htmlFor={`range2${index}`}>
-                            <div className="range-input-label">2</div>
-                        </label>
-                    </div>
-
-                    <div className="range-input-options">
-                        <input
-                            type="radio"
-                            name={`range${index}`}
-                            id={`range3${index}`}
-                            value="3"
-                            onChange={(e) => handleOptionChange(e, index)}
-                        />
-                        <label htmlFor={`range3${index}`}>
-                            <div className="range-input-label">3</div>
-                        </label>
-                    </div>
-
-                    <div className="range-input-options">
-                        <input
-                            type="radio"
-                            name={`range${index}`}
-                            id={`range4${index}`}
-                            value="4"
-                            onChange={(e) => handleOptionChange(e, index)}
-                        />
-                        <label htmlFor={`range4${index}`}>
-                            <div className="range-input-label">4</div>
-                        </label>
-                    </div>
-
-                    <div className="range-input-options">
-                        <input
-                            type="radio"
-                            name={`range${index}`}
-                            id={`range5${index}`}
-                            value="5"
-                            onChange={(e) => handleOptionChange(e, index)}
-                        />
-                        <label htmlFor={`range5${index}`}>
-                            <div className="range-input-label">5</div>
-                        </label>
-                    </div>
-
-                    <div className="range-input-options">
-                        <input
-                            type="radio"
-                            name={`range${index}`}
-                            id={`range6${index}`}
-                            value="6"
-                            onChange={(e) => handleOptionChange(e, index)}
-                        />
-                        <label htmlFor={`range6${index}`}>
-                            <div className="range-input-label">6</div>
-                        </label>
-                    </div>
-
-                    <div className="range-input-options">
-                        <input
-                            type="radio"
-                            name={`range${index}`}
-                            id={`range7${index}`}
-                            value="7"
-                            onChange={(e) => handleOptionChange(e, index)}
-                        />
-                        <label htmlFor={`range7${index}`}>
-                            <div className="range-input-label">7</div>
-                        </label>
-                    </div>
-
-                    <div className="range-input-options">
-                        <input
-                            type="radio"
-                            name={`range${index}`}
-                            id={`range8${index}`}
-                            value="8"
-                            onChange={(e) => handleOptionChange(e, index)}
-                        />
-                        <label htmlFor={`range8${index}`}>
-                            <div className="range-input-label">8</div>
-                        </label>
-                    </div>
-
-                    <div className="range-input-options">
-                        <input
-                            type="radio"
-                            name={`range${index}`}
-                            id={`range9${index}`}
-                            value="9"
-                            onChange={(e) => handleOptionChange(e, index)}
-                        />
-                        <label htmlFor={`range9${index}`}>
-                            <div className="range-input-label">9</div>
-                        </label>
-                    </div>
-
-                    <div className="range-input-options">
-                        <input
-                            type="radio"
-                            name={`range${index}`}
-                            id={`range10${index}`}
-                            value="10"
-                            onChange={(e) => handleOptionChange(e, index)}
-                        />
-                        <label htmlFor={`range10${index}`}>
-                            <div className="range-input-label">10</div>
-                        </label>
-                    </div> */}
                 </div>
             );
         }
@@ -309,6 +183,8 @@ export default function FormView() {
 
     return (
         <div className="question__container">
+            <div className="question__box-topic">{ topicName }</div>
+
             {forms.map((each, index) => (
                 <div key={index} className="question__box">
                     <span className="question-title">
@@ -318,7 +194,12 @@ export default function FormView() {
                 </div>
             ))}
 
-            <button onClick={handleSubmit}>Submit</button>
+            <button 
+                className="formview__btn-add"
+                onClick={handleSubmit}
+            >
+                Submit
+            </button>
         </div>
     );
 }

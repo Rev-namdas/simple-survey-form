@@ -10,6 +10,7 @@ import Error404page    from './pages/message-page/Error404page'
 import MessagePage     from './pages/message-page/MessagePage'
 import ResponseDetails from './pages/response-page/ResponseDetails'
 import ResponsePage    from './pages/response-page/ResponsePage'
+import Navbar from './pages/layout/Navbar';
 
 // const HomePage        = lazy(() => import("./pages/home-page/HomePage"))
 // const FormCreate      = lazy(() => import("./pages/form-create/FormCreate"))
@@ -23,18 +24,20 @@ import ResponsePage    from './pages/response-page/ResponsePage'
 function App() {
   return (
     // <Suspense fallback={<div>Loading...</div>}>
-      <Router>
-        <Routes>
-          <Route path='/' element={<HomePage />} />
-          <Route path='/new/:url' element={<FormCreate />} />
-          <Route path='/view/:url' element={<FormView />} />
-          <Route path='/edit/:url' element={<FormEdit />} />
-          <Route path='/thank-you' element={<MessagePage />} />
-          <Route path='/admin/responses' element={<ResponsePage />} />
-          <Route path='/admin/responses/list/:id' element={<ResponseDetails />} />
-          <Route path='*' element={<Error404page />} />
-        </Routes>
-      </Router>
+        <Router>
+      <Navbar>
+          <Routes>
+            <Route path='/' element={<HomePage />} />
+            <Route path='/new/:url' element={<FormCreate />} />
+            <Route path='/view/:url' element={<FormView />} />
+            <Route path='/edit/:url' element={<FormEdit />} />
+            <Route path='/thank-you' element={<MessagePage />} />
+            <Route path='/admin/responses' element={<ResponsePage />} />
+            <Route path='/admin/responses/list/:id' element={<ResponseDetails />} />
+            <Route path='*' element={<Error404page />} />
+          </Routes>
+      </Navbar>
+        </Router>
     // </Suspense>
   );
 }

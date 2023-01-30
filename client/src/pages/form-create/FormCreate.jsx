@@ -15,7 +15,7 @@ export default function FormCreate() {
     };
 
     const [forms, setForms] = useState([initialForm]);
-    const [rangeValue, setRangeValue] = useState(5)
+    const [rangeValue, setRangeValue] = useState(0)
     const navigate = useNavigate()
     const params = useParams()
     const { state: { topic } } = useLocation()
@@ -205,14 +205,41 @@ export default function FormCreate() {
         } else if (item === 6) {
             return (
                 <div>
+                    <div className="formcreate__range">
+                        <div className="formcreate__range-label">
+                            <div>Start From: </div>
+                            <input 
+                                type="number" 
+                                placeholder="Start" 
+                                onChange={(e) => handleOptionChange(e, index, 0)}
+                            />
+                        </div>
+                        <div className="formcreate__range-label">
+                            <div>End: </div>
+                            <input 
+                                type="number" 
+                                placeholder="End" 
+                                onChange={(e) => handleOptionChange(e, index, 1)}
+                            />
+                        </div>
+                        <div className="formcreate__range-label">
+                            <div>Gap: </div>
+                            <input 
+                                type="number" 
+                                placeholder="Gap" 
+                                onChange={(e) => handleOptionChange(e, index, 2)}
+                            />
+                        </div>
+                    </div>
                     <div className="form__slider-label">{ rangeValue }</div>
                     <input 
                         type="range" 
                         className="form__slider"
                         name="range" 
                         id="range" 
-                        min={0}
-                        max={10}
+                        min={forms[index].option[0]}
+                        max={forms[index].option[1]}
+                        step={forms[index].option[2]}
                         value={rangeValue}
                         onChange={(e) => setRangeValue(e.target.value)}
                     />

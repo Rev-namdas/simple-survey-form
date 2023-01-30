@@ -13,7 +13,9 @@ export default function HomePage() {
     const [urlName, setUrlName] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
-    const handleCreate = async () => {
+    const handleCreate = async (e) => {
+        e.preventDefault()
+
         if(topic === ""){
             toast.dismiss()
             return toast.error('Fill up the topic box', {
@@ -77,6 +79,7 @@ export default function HomePage() {
             pauseOnHover
             theme="light"
         />
+        <div className="homepage__container">
         <h3 className="homepage__title">Survey Software</h3>
         <form className="homepage__wrapper">
             <div className="homapage__input-group">
@@ -109,6 +112,7 @@ export default function HomePage() {
                 </div>
             </div>
         </form>
+        </div>
         </>
     );
 }

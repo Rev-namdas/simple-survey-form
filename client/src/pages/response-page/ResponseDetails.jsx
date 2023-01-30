@@ -138,27 +138,29 @@ export default function ResponseDetails() {
 
     return (
         <>
-            <div>ResponseDetails</div>
-            <div>
-                <span>Select Excel: </span>
-                <input type="file" name="file" id="file" onChange={handleFileUpload} />
-                <button onClick={handleUploadBtn} disabled={uploadBtnDisable}>Upload</button>
-            </div>
-            <button onClick={() => console.log(questions)}>Print</button>
-            <button onClick={handleDownloadExcel}>Download</button>
+            <div className="response__btn-header">
+                <div className="response__btn-header-title">Total Responses: {responseLength}</div>
 
-            <div>Total: {responseLength}</div>
+                <div>
+                    <span>Select Excel: </span>
+                    <input type="file" name="file" id="file" onChange={handleFileUpload} />
+                    <button onClick={handleUploadBtn} disabled={uploadBtnDisable}>Upload</button>
+                    <button  className="response__btn-header-download" onClick={handleDownloadExcel}>
+                        Download
+                    </button>
+                </div>
+            </div>
 
             {responseMsg.length > 0 && <div>{responseMsg}</div>}
 
-            <table id="table-to-export">
-                <thead>
+            <table id="table-to-export" className="response-details__table">
+                <thead className="response-details__table-head">
                     <tr>
-                        <th style={{ padding: "0.4rem 1rem", minWidth: "3rem", backgroundColor: "white" }}>Sl</th>
+                        <th className="response-details__table-th">Sl</th>
                         {questions.map((each, quesIndex) => (
                             <th 
                                 key={quesIndex}
-                                style={{ padding: "0.4rem 1rem", minWidth: "15rem", backgroundColor: "white" }}
+                                className="response-details__table-th"
                             >
                                 {each.question}
                             </th>
@@ -167,10 +169,10 @@ export default function ResponseDetails() {
                 </thead>
                 <tbody>
                     {responseList?.map((eachResponse, index) => (
-                        <tr key={index}>
-                            <td style={{ padding: "0.4rem 1rem", minWidth: "3rem", backgroundColor: "white", textAlign: "center" }}>{ index + 1 }</td>
+                        <tr key={index} className="response-details__table-row">
+                            <td className="response-details__table-td">{ index + 1 }</td>
                             {eachResponse.map((each, responseIndex) => (
-                                <td key={responseIndex} style={{ padding: "0.4rem 1rem", minWidth: "15rem", backgroundColor: "white" }}>{each.answer}</td>
+                                <td key={responseIndex} className="response-details__table-td">{each.answer}</td>
                             ))}
                         </tr>
                     ))}

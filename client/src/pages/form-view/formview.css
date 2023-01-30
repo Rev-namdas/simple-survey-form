@@ -12,6 +12,18 @@
 	padding: 1rem;
 }
 
+.question__box-topic{
+	width: var(--width);
+	padding: var(--space);
+	margin-bottom: 1rem;
+	background-color: #fff;
+	box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2);
+	border-radius: 0.3rem;
+	text-align: center;
+	color: rgb(5, 82, 184);
+	font-weight: bold;
+}
+
 .question__box{
 	min-height: 5rem;
 	width: var(--width);
@@ -52,10 +64,9 @@
 }
 
 .options-input-group{
-	display: flex;
-	flex-wrap: wrap;
-	gap: 0.4rem;
 	margin-top: 1rem;
+	display: grid;
+	gap: 0.4rem;
 }
 
 .options-input{
@@ -75,7 +86,7 @@
 }
 
 .options-input-label{
-	width: 17.5rem;
+	width: 100%;
 	padding-left: 0.5rem;
 	cursor: pointer;
 }
@@ -101,4 +112,18 @@ input:checked ~ label > div{
 
 .question-title{
 	color: rgb(5, 82, 184);
+}
+
+.formview__btn-add{
+	border: none;
+	outline: none;
+	color: white;
+	padding: 0.5rem 1rem;
+	border-radius: 0.2rem;
+	cursor: pointer;
+	background-color: #009249;
+}
+
+.formview__btn-add:hover{
+	background-color: #006e37;
 }
