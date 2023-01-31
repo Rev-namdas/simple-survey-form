@@ -112,9 +112,22 @@ export default function FormEdit() {
         }
     }
 
+    const handleDragAndSort = () => {
+        const updated = [...forms]
+
+        const draggedItem = updated.splice(draggedItemIndex.current, 1)[0]
+        updated.splice(draggedOverItemIndex.current, 0, draggedItem)
+
+        setForms(updated)
+
+        draggedItemIndex.current = null
+        draggedOverItemIndex.current = null
+    }
+
     const handleUpdate = async () => {
         const payload = {
             topic_id: topic_id,
+            topic_name: topicName,
             json_data: JSON.stringify(forms)
         }
 
@@ -229,27 +242,17 @@ export default function FormEdit() {
         }
     };
 
-    const handleDragAndSort = () => {
-        const updated = [...forms]
-
-        const draggedItem = updated.splice(draggedItemIndex.current, 1)[0]
-        updated.splice(draggedOverItemIndex.current, 0, draggedItem)
-
-        setForms(updated)
-
-        draggedItemIndex.current = null
-        draggedOverItemIndex.current = null
-    }
-
     return (
         <div className="form__container">
-            {/* <div className="question__box-topic">
+            <div className="question__box-topic">
+                Topic: 
                 <input 
                     className="form__box-topic-input"
                     type="text" 
                     value={topicName}
+                    onChange={(e) => setTopicName(e.target.value)}
                 />
-            </div> */}
+            </div>
 
             {forms.map((each, index) => (
                 <div 

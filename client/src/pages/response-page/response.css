@@ -89,12 +89,17 @@
 	border: none;
 	padding: 0.5rem 1rem;
 	border-radius: 0.25rem;
-	margin-left: 0.5rem;
+	margin: 1rem 0.5rem;
 	cursor: pointer;
 }
 
 .response__btn-header-download:hover{
 	background-color: #00793c;
+}
+
+.response__btn-header-download:disabled{
+	background-color: gray;
+	color: black;
 }
 
 .response-details__table{

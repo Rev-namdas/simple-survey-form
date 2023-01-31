@@ -14,6 +14,7 @@ export default function ResponseDetails() {
     const [uploadBtnDisable, setUploadBtnDisable] = useState(true)
     const [isLoading, setIsLoading] = useState(false)
     const [responseMsg, setResponseMsg] = useState("")
+    const [downloadBtnDisable, setDownloadBtnDisable] = useState(true)
 	const checkIds = useRef([])
 
     let totalInserted = 0
@@ -21,12 +22,14 @@ export default function ResponseDetails() {
 
     const fetchResponses = async () => {
         setIsLoading(true)
-        // const res = await getTopicDetailsById(params.id);
         const payload = `${params.id}/${cursor}`
         
         const res = await getTopicDetailsByIdPage(payload);
         cursor = res?.next || 0
         setResponseLength(res?.total)
+        if(res?.next === -1){
+            setDownloadBtnDisable(false)
+        }
 
         res?.result?.forEach((each) => {
             if (!checkIds.current.includes(each.id)) {
@@ -139,15 +142,12 @@ export default function ResponseDetails() {
     return (
         <>
             <div className="response__btn-header">
-                <div className="response__btn-header-title">Total Responses: {responseLength}</div>
+                <div className="response__btn-header-title">Total Responses: {responseLength} {downloadBtnDisable.toString()}</div>
 
                 <div>
                     <span>Select Excel: </span>
                     <input type="file" name="file" id="file" onChange={handleFileUpload} />
                     <button onClick={handleUploadBtn} disabled={uploadBtnDisable}>Upload</button>
-                    <button  className="response__btn-header-download" onClick={handleDownloadExcel}>
-                        Download
-                    </button>
                 </div>
             </div>
 
@@ -176,9 +176,16 @@ export default function ResponseDetails() {
                             ))}
                         </tr>
                     ))}
-                    {isLoading && <tr><div></div></tr>}
+                    {isLoading && <tr><div>Loading More...</div></tr>}
                 </tbody>
             </table>
+            <button 
+                className="response__btn-header-download" 
+                onClick={handleDownloadExcel}
+                disabled={downloadBtnDisable}
+            >
+                Download
+            </button>
             <br />
         </>
     );
