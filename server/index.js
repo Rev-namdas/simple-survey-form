@@ -57,11 +57,15 @@ app.post("/api/create", (req, res) => {
 });
 
 app.patch("/api/update", (req, res) => {
-    const { topic_id, json_data } = req.body;
+    const { topic_id, json_data, topic_name } = req.body;
 
-    const sql = "UPDATE forms SET questions = ? WHERE id = ?";
+    const sql = `
+        UPDATE forms 
+        SET questions = ?, topic = ? 
+        WHERE id = ?
+    `;
 
-    db.query(sql, [json_data, topic_id], (err, result) => {
+    db.query(sql, [json_data, topic_name, topic_id], (err, result) => {
         if (err) {
             console.log("❌ Error:", err.message);
             return res.send({
