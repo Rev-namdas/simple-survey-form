@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useRef } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { getTopicDetailsByIdPage, getTopicQuestionsById, saveMultipleAnswers } from "../../api/apiRequest";
 import * as xlsx from "xlsx"
 
 export default function ResponseDetails() {
     const params = useParams();
 	const { state: { topic } } = useLocation()
+    const navigate = useNavigate()
     const [responseList, setResponseList] = useState([]);
     const [responseLength, setResponseLength] = useState(0)
     const [questions, setQuestions] = useState([])
@@ -142,7 +143,13 @@ export default function ResponseDetails() {
     return (
         <>
             <div className="response__btn-header">
-                <div className="response__btn-header-title">Total Responses: {responseLength} {downloadBtnDisable.toString()}</div>
+                <div className="response__btn-header-title">Total Responses: {responseLength}</div>
+                <button onClick={() => navigate("/chart", {
+                    state: {
+                        answers: responseList,
+                        questions: questions
+                    }
+                })}>Chart</button>
 
                 <div>
                     <span>Select Excel: </span>
