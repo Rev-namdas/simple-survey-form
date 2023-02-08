@@ -15,7 +15,7 @@ export default function ResponseDetails() {
     const [uploadBtnDisable, setUploadBtnDisable] = useState(true)
     const [isLoading, setIsLoading] = useState(false)
     const [responseMsg, setResponseMsg] = useState("")
-    const [downloadBtnDisable, setDownloadBtnDisable] = useState(true)
+    const [btnDisable, setBtnDisable] = useState(true)
 	const checkIds = useRef([])
 
     let totalInserted = 0
@@ -29,7 +29,7 @@ export default function ResponseDetails() {
         cursor = res?.next || 0
         setResponseLength(res?.total)
         if(res?.next === -1){
-            setDownloadBtnDisable(false)
+            setBtnDisable(false)
         }
 
         res?.result?.forEach((each) => {
@@ -144,12 +144,6 @@ export default function ResponseDetails() {
         <>
             <div className="response__btn-header">
                 <div className="response__btn-header-title">Total Responses: {responseLength}</div>
-                <button onClick={() => navigate("/chart", {
-                    state: {
-                        answers: responseList,
-                        questions: questions
-                    }
-                })}>Chart</button>
 
                 <div>
                     <span>Select Excel: </span>
@@ -189,9 +183,20 @@ export default function ResponseDetails() {
             <button 
                 className="response__btn-header-download" 
                 onClick={handleDownloadExcel}
-                disabled={downloadBtnDisable}
-            >
+                disabled={btnDisable}
+                >
                 Download
+            </button>
+            <button 
+                className="response__btn-header-download" 
+                disabled={btnDisable}
+                onClick={() => 
+                    navigate("/chart", { state: { 
+                        answers: responseList, 
+                        questions: questions 
+                    }})}
+            >
+                Chart
             </button>
             <br />
         </>

@@ -23,7 +23,9 @@ export default function LineChart({ labels = [], values = [] }) {
 		  dataLabels: {
 			enabled: true,
 			formatter: function (val) {
-			  return val + "%";
+				const total = values.reduce((a,b) => a+b)
+				const percentage = ((100 / total) * val).toFixed(1)
+				return percentage + "%";
 			},
 			offsetY: -20,
 			style: {
@@ -65,10 +67,12 @@ export default function LineChart({ labels = [], values = [] }) {
 			  show: false,
 			},
 			labels: {
-			  show: false,
-			  formatter: function (val) {
-				return val + "%";
-			  }
+				show: true,
+				formatter: function (val) {
+					const total = values.reduce((a,b) => a+b)
+					const percentage = ((100 / total) * val).toFixed(1)
+					return percentage + "%";
+				}
 			}
 		  
 		  }

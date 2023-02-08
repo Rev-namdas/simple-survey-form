@@ -34,7 +34,8 @@ export default function PieChart({ labels = [], values = [] }) {
         options={data.options} 
         series={data.series} 
         type="pie" 
-        width={'40%'}
+        width={'50%'}
+        height={300}
       />
     </>
   )

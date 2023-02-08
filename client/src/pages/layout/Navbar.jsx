@@ -9,7 +9,7 @@ export default function Navbar({ children }) {
     <>
       <div className='navbar'>
         <div className='navbar__logo-wrapper'>
-          <img className='navbar__logo' src={window.location.origin + '/ryans-archive-logo.png'} alt="Ryans Logo" />
+          <img className='navbar__logo' src={window.location.origin + '/logo.png'} alt="Survey System" />
           <span className="navbar__title">Survey Software</span>
         </div>
 

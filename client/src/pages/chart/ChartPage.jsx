@@ -1,57 +1,21 @@
-// import React from "react";
-// import Chart from "chart.js/auto";
-// import { Pie } from "react-chartjs-2";
-// import 'chartjs-plugin-datalabels';
-
-// const labels = ["January", "February", "March", "April", "May", "June"];
-// const data = {
-//   labels: labels,
-//   datasets: [
-//     {
-//       label: "Population",
-//       backgroundColor: [
-//         'rgba(255, 99, 132, 0.6)',
-//         'rgba(54, 162, 235, 0.6)',
-//         'rgba(255, 206, 86, 0.6)',
-//         'rgba(75, 192, 192, 0.6)',
-//         'rgba(153, 102, 255, 0.6)',
-//         'rgba(255, 159, 64, 0.6)',
-//         'rgba(255, 99, 132, 0.6)'
-//       ],
-//       borderColor: "rgb(0,0,0)",
-//       data: [10, 5, 2, 20, 30, 45],
-//     },
-//   ],
-// };
-// const ChartPage = () => {
-//   return (
-//     <div style={{ height: '20rem', width: '20rem' }}>
-//       <Pie 
-//         data={data}
-//         options={{
-//           plugins: {
-//             labels: {
-//               render: (args) => {
-//                 return args.label
-//               }
-//             }
-//           } 
-//         }}
-//       />
-//     </div>
-//   );
-// };
-// export default ChartPage;
-
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import LineChart from './linechart/LineChart';
 import PieChart from './piechart/PieChart';
-// import ReactApexChart from 'react-apexcharts'
+import "./chartbox.css"
 
 export default function ChartPage() {
   const { state } = useLocation()
-  const [selection, setSelection] = useState([])
+  const [chartSelection, setChartSelection] = useState([])
+
+  useEffect(() => {
+    window.scrollTo(0,0)
+
+    const arr = state?.questions.map(_ => '1')
+    setChartSelection(arr)
+  }, 
+  //eslint-disable-next-line
+  [])
 
   const getChartData = (payload) => {
     let arr = payload;
@@ -83,34 +47,36 @@ export default function ChartPage() {
   }
 
   const handleChartTypeSelection = (e, index) => {
-    const update = [...selection]
+    const update = [...chartSelection]
     update[index] = e.target.value
-    setSelection(update)
+    setChartSelection(update)
   }
   
   return (
     <>
       <br />
       {state?.questions?.map((each, index) => (
-        <>
-        <button onClick={() => console.log(selection)}>print</button>
-          <div key={index} style={{ marginLeft: '5rem' }}>
-            {each.question}
-            <select value={selection[index]} onChange={(e) => handleChartTypeSelection(e, index)}>
-              <option value="1">1</option>
-              <option value="2">2</option>
-            </select>
+        <div key={index} className="chart-box">
+          {index + 1}. {each.question}
+          <select value={chartSelection[index]} onChange={(e) => handleChartTypeSelection(e, index)}>
+            <option value="1">Pie Chart</option>
+            <option value="2">Bar Chart</option>
+          </select>
+
+          {chartSelection[index] === '1' &&
             <PieChart 
               labels={getChartData(state?.answers?.map(each => each[index]?.answer))[0]}
               values={getChartData(state?.answers?.map(each => each[index]?.answer))[1]}
-              />
+            />
+          }
+
+          {chartSelection[index] === '2' &&
             <LineChart 
               labels={getChartData(state?.answers?.map(each => each[index]?.answer))[0]}
               values={getChartData(state?.answers?.map(each => each[index]?.answer))[1]}
             />
-          </div>
-          <br />
-        </>
+          }
+        </div>
       ))}
     </>
   )
