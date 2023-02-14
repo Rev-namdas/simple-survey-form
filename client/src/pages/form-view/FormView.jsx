@@ -47,6 +47,23 @@ export default function FormView() {
         setAnswers(update);
     };
 
+    const handleRadioButton = (index, e) => {
+        const update = [...forms]
+        
+        if(update[index].selected === e.target.value){
+            update[index].selected = ''
+
+            const updateAnswer = [...answers];
+            updateAnswer[index]["answer"] = '';
+
+            setAnswers(updateAnswer);
+        } else {
+            update[index].selected = e.target.value
+        }
+        
+        setForms(update)
+    }
+
     const handleOptionsChange = (e, index) => {
         const update = [...answers];
         
@@ -127,6 +144,8 @@ export default function FormView() {
                                 name={`radio${index}`}
                                 id={`radio${index}${OptionIndex}`}
                                 defaultValue={each}
+                                checked={forms[index]?.selected === each}
+                                onClick={(e) => handleRadioButton(index, e)}
                             />
                             <label className="options-input-label" htmlFor={`radio${index}${OptionIndex}`}>
                                 <div>

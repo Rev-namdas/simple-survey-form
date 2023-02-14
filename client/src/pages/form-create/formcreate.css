@@ -76,6 +76,8 @@
 	background-color: #e43838;
 	color: white;
 	cursor: pointer;
+	border-radius: 0.2rem;
+	padding: 0 0.5rem;
 }
 
 .form__group-btn-remove:hover{

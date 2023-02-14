@@ -330,12 +330,12 @@ export default function FormCreate() {
                                         )
                                     }
                                 >
-                                    <option value="1">Short Answer</option>
-                                    <option value="2">Details Answer</option>
-                                    <option value="3">Dropdown</option>
-                                    <option value="4">Multiple Choice</option>
-                                    <option value="5">Multiple Answer</option>
-                                    <option value="6">Range</option>
+                                    <option style={{ padding: '10px !important' }} value="1">Short Answer</option>
+                                    <option style={{ padding: '10px !important' }} value="2">Details Answer</option>
+                                    <option style={{ padding: '10px !important' }} value="3">Dropdown</option>
+                                    <option style={{ padding: '10px !important' }} value="4">Multiple Choice</option>
+                                    <option style={{ padding: '10px !important' }} value="5">Multiple Answer</option>
+                                    <option style={{ padding: '10px !important' }} value="6">Range</option>
                                 </select>
                             </div>
 
