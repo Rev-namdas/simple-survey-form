@@ -173,9 +173,10 @@
 
 .formcreate__range{
 	display: grid;
-	grid-template-columns: repeat(3, 1fr);
+	grid-template-columns: repeat(auto-fit, minmax(3rem, 1fr));
 	margin-top: 0.5rem;
 	gap: 0.5rem;
+	width: 100%;
 }
 
 .formcreate__range-label{
@@ -219,4 +220,14 @@
 
 .formcreate__btn-save:hover{
 	background-color: #005c8d;
+}
+
+@media screen and (max-width: 600px) {
+	.form__box{
+		width: 90%;
+	}
+
+	.formcreate__range{
+		display: block;
+	}
 }

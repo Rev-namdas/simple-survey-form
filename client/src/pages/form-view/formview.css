@@ -132,3 +132,9 @@ input:checked ~ label > div{
 .formview__btn-add:hover{
 	background-color: #006e37;
 }
+
+@media screen and (max-width: 600px) {
+	.question__box-topic, .question__box, .answer-dropdown, .answer-input{
+		width: 90%;
+	}
+}

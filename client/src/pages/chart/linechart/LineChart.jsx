@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactApexChart from 'react-apexcharts'
 
-export default function LineChart({ labels = [], values = [] }) {
+export default function LineChart({ labels = [], values = [], index }) {
 	const data = {
 		series: [{
 		  name: 'Percentage',
@@ -9,6 +9,7 @@ export default function LineChart({ labels = [], values = [] }) {
 		}],
 		options: {
 		  chart: {
+			id: `chart-line-${index}`,
 			height: 350,
 			type: 'bar',
 		  },

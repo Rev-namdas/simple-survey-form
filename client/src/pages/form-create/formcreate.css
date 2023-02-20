@@ -216,3 +216,13 @@
 .formcreate__btn-save:hover{
 	background-color: #005c8d;
 }
+
+@media screen and (max-width: 600px) {
+	.form__box{
+		width: 90%;
+	}
+
+	.formcreate__range{
+		display: block;
+	}
+}

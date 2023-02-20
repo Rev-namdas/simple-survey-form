@@ -46,3 +46,10 @@
 .homepage__container{
 	position: relative;
 }
+
+@media screen and (max-width: 600px) {
+	.homepage__wrapper{
+		width: 80%;
+
+	}
+}

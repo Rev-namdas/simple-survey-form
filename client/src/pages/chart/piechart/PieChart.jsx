@@ -1,11 +1,12 @@
 import React from 'react'
 import ReactApexChart from 'react-apexcharts'
 
-export default function PieChart({ labels = [], values = [] }) {
+export default function PieChart({ labels = [], values = [], index }) {
   const data = {
     series: values,
     options: {
       chart: {
+        id: `chart-pie-${index}`,
         width: '50%',
         type: 'pie',
         toolbar: {
