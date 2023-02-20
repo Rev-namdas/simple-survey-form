@@ -1,8 +1,7 @@
 import axios from "axios"
 import { apiEndpoints } from "./endpoints"
 
-const client = axios.create({ baseURL: "https://dev.mskhantrading.com/api" })
-// const client = axios.create({ baseURL: "http://192.168.110.138:1111/api" })
+const client = axios.create({ baseURL: "http://192.168.110.138:1111/api" })
 
 export const checkUrlExists = async (payload) => {
 	try {
