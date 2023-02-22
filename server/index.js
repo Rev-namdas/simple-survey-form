@@ -26,3 +26,4 @@ app.get("/", (req, res) => {
 
 require("./apps/forms/forms.routes")(app)
 require("./apps/answers/answers.routes")(app)
+require("./apps/reports/report.routes")(app)

@@ -102,3 +102,33 @@ export const getTopicQuestionsById = async (payload) => {
 		return null
 	}
 }
+
+export const saveReport = async (payload) => {
+	try {
+		const res = await client.post(apiEndpoints.save_report, payload)
+		return res.data
+	} catch (error) {
+		console.log(error.message);
+		return null
+	}
+}
+
+export const getReport = async (payload) => {
+	try {
+		const res = await client.get(apiEndpoints.get_report + payload)
+		return res.data
+	} catch (error) {
+		console.log(error.message);
+		return null
+	}
+}
+
+export const updateReport = async (payload) => {
+	try {
+		const res = await client.patch(apiEndpoints.update_report, payload)
+		return res.data
+	} catch (error) {
+		console.log(error.message);
+		return null
+	}
+}

@@ -12,6 +12,8 @@ import ResponseDetails from './pages/response-page/ResponseDetails'
 import ResponsePage    from './pages/response-page/ResponsePage'
 import Navbar from './pages/layout/Navbar';
 import ChartPage from './pages/chart/ChartPage';
+import ReportCreatePage from './pages/report-create/ReportCreatePage';
+import ReportEditPage from './pages/report-edit/ReportEditPage';
 
 // const HomePage        = lazy(() => import("./pages/home-page/HomePage"))
 // const FormCreate      = lazy(() => import("./pages/form-create/FormCreate"))
@@ -36,6 +38,8 @@ function App() {
             <Route path='/admin/responses' element={<ResponsePage />} />
             <Route path='/admin/responses/list/:id' element={<ResponseDetails />} />
             <Route path='/chart' element={<ChartPage />} />
+            <Route path='/report/create' element={<ReportCreatePage />} />
+            <Route path='/report/edit' element={<ReportEditPage />} />
             <Route path='*' element={<Error404page />} />
           </Routes>
       </Navbar>

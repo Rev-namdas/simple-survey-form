@@ -9,4 +9,7 @@ export const apiEndpoints = {
 	topic_questions_by_id: '/form/fetch-question-by-id/',
 	topic_details_by_id: "/answer/fetch-details-by-id/",
 	topic_details_by_id_page: "/answer/fetch-details-by-id-page/",
+	save_report: "/report/save",
+	get_report: "/report/fetch/",
+	update_report: "/report/update/"
 }

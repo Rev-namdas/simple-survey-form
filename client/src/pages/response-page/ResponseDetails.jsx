@@ -198,6 +198,31 @@ export default function ResponseDetails() {
             >
                 Chart
             </button>
+            <button 
+                className="response__btn-header-download" 
+                disabled={btnDisable}
+                onClick={() => 
+                    navigate("/report/create", { state: { 
+                        answers: responseList, 
+                        questions: questions,
+                        topic_id: params.id
+                    }})}
+            >
+                Create Report
+            </button>
+            <button 
+                className="response__btn-header-download" 
+                disabled={btnDisable}
+                onClick={() => 
+                    navigate("/report/edit", { state: { 
+                        answers: responseList, 
+                        questions: questions,
+                        topic_id: params.id
+                    }})}
+            >
+                Edit Report
+            </button>
+
             <br />
         </>
     );
