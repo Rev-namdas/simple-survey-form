@@ -132,3 +132,23 @@ export const updateReport = async (payload) => {
 		return null
 	}
 }
+
+export const checkIfReportExist = async (payload) => {
+	try {
+		const res = await client.get(apiEndpoints.check_report_exist + payload)
+		return res.data
+	} catch (error) {
+		console.log(error.message);
+		return null
+	}
+}
+
+export const deleteReport = async (payload) => {
+	try {
+		const res = await client.delete(apiEndpoints.delete_report + payload)
+		return res.data
+	} catch (error) {
+		console.log(error.message);
+		return null
+	}
+}

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useRef } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { getTopicDetailsByIdPage, getTopicQuestionsById, saveMultipleAnswers } from "../../api/apiRequest";
+import { checkIfReportExist, getTopicDetailsByIdPage, getTopicQuestionsById, saveMultipleAnswers } from "../../api/apiRequest";
 import * as xlsx from "xlsx"
 
 export default function ResponseDetails() {
@@ -16,13 +16,13 @@ export default function ResponseDetails() {
     const [isLoading, setIsLoading] = useState(false)
     const [responseMsg, setResponseMsg] = useState("")
     const [btnDisable, setBtnDisable] = useState(true)
+    const [showEditBtn, setShowEditBtn] = useState(false)
 	const checkIds = useRef([])
 
     let totalInserted = 0
     let cursor = 0
 
     const fetchResponses = async () => {
-        setIsLoading(true)
         const payload = `${params.id}/${cursor}`
         
         const res = await getTopicDetailsByIdPage(payload);
@@ -38,14 +38,16 @@ export default function ResponseDetails() {
                 checkIds.current.push(each.id);
             }
         });
-        setIsLoading(false)
     };
     
     const fetchQuestions = async () => {
-        setIsLoading(true)
         const ques = await getTopicQuestionsById(params.id)
         setQuestions(JSON.parse(ques[0]?.questions || {}))
-        setIsLoading(false)
+    }
+
+    const fetchReportStatus = async () => {
+        const res = await checkIfReportExist(params.id)
+        setShowEditBtn(res.exists)
     }
 
     const handleFileUpload = (e) => {
@@ -118,8 +120,13 @@ export default function ResponseDetails() {
 
     useEffect(
         () => {
+            setIsLoading(true)
+
             fetchResponses();
             fetchQuestions();
+            fetchReportStatus();
+
+            setIsLoading(false)
             
             let fetching = false
             async function trackScroll(e){
@@ -198,30 +205,35 @@ export default function ResponseDetails() {
             >
                 Chart
             </button>
-            <button 
-                className="response__btn-header-download" 
-                disabled={btnDisable}
-                onClick={() => 
-                    navigate("/report/create", { state: { 
-                        answers: responseList, 
-                        questions: questions,
-                        topic_id: params.id
-                    }})}
-            >
-                Create Report
-            </button>
-            <button 
-                className="response__btn-header-download" 
-                disabled={btnDisable}
-                onClick={() => 
-                    navigate("/report/edit", { state: { 
-                        answers: responseList, 
-                        questions: questions,
-                        topic_id: params.id
-                    }})}
-            >
-                Edit Report
-            </button>
+
+            {showEditBtn
+            ?
+                <button 
+                    className="response__btn-header-download" 
+                    disabled={btnDisable}
+                    onClick={() => 
+                        navigate("/report/edit", { state: { 
+                            answers: responseList, 
+                            questions: questions,
+                            topic_id: params.id
+                        }})}
+                >
+                    Edit Report
+                </button>
+            :
+                <button 
+                    className="response__btn-header-download" 
+                    disabled={btnDisable}
+                    onClick={() => 
+                        navigate("/report/create", { state: { 
+                            answers: responseList, 
+                            questions: questions,
+                            topic_id: params.id
+                        }})}
+                >
+                    Create Report
+                </button>
+            }
 
             <br />
         </>

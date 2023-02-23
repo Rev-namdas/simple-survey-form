@@ -11,5 +11,7 @@ export const apiEndpoints = {
 	topic_details_by_id_page: "/answer/fetch-details-by-id-page/",
 	save_report: "/report/save",
 	get_report: "/report/fetch/",
-	update_report: "/report/update/"
+	update_report: "/report/update/",
+	check_report_exist: "/report/check-exist/",
+	delete_report: "/report/delete/"
 }
