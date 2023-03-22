@@ -72,7 +72,6 @@
 
 .form__group-btn-remove{
 	border: none;
-	outline: none;
 	background-color: #e43838;
 	color: white;
 	cursor: pointer;
@@ -86,7 +85,6 @@
 
 .form__group-btn-add-option{
 	border: none;
-	outline: none;
 	background-color: #1F8A70;
 	color: white;
 	padding: 0.3rem 0.5rem;
@@ -186,7 +184,6 @@
 
 .formcreate__btn{
 	border: none;
-	outline: none;
 	color: white;
 	padding: 0.5rem 1rem;
 	border-radius: 0.2rem;

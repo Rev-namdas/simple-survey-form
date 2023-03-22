@@ -47,6 +47,30 @@ export default function ChartPage() {
     return [labels, values]
   }
 
+  const getRankingChartData = (payload) => {
+    const arr = [] 
+    const total = payload.filter(each => each !== "").length
+    
+    payload
+      .filter(each => each !== "")
+      .forEach(each => {
+        each.split(",").forEach(each => {
+          arr.push(each.trim())
+        })
+      })
+
+    const obj = {}
+    for (let i = 0; i < arr.length; i++) {
+      const element = arr[i];
+      obj[element] = obj[element] ? obj[element] + 1 : 1;
+    }
+
+    let labels = Object.keys(obj)
+    let values = Object.values(obj)
+
+    return [labels, values, total]
+  }
+
   const handleChartTypeSelection = (e, index) => {
     const update = [...chartSelection]
     update[index] = e.target.value
@@ -63,6 +87,8 @@ export default function ChartPage() {
           <select value={chartSelection[index]} onChange={(e) => handleChartTypeSelection(e, index)}>
             <option value="1">Pie Chart</option>
             <option value="2">Bar Chart</option>
+            <option value="3">Pie Chart (Unique Data)</option>
+            <option value="4">Bar Chart (Unique Data)</option>
           </select>
 
           {chartSelection[index] === '1' &&
@@ -78,6 +104,26 @@ export default function ChartPage() {
               index={index}
               labels={getChartData(state?.answers?.map(each => each[index]?.answer))[0]}
               values={getChartData(state?.answers?.map(each => each[index]?.answer))[1]}
+            />
+          }
+
+          {chartSelection[index] === '3' &&
+            <PieChart 
+              index={index}
+              labels={getRankingChartData(state?.answers?.map(each => each[index]?.answer))[0]}
+              values={getRankingChartData(state?.answers?.map(each => each[index]?.answer))[1]}
+              customDataLabels
+              totalResponse={getRankingChartData(state?.answers?.map(each => each[index]?.answer))[2]}
+            />
+          }
+
+          {chartSelection[index] === '4' &&
+            <LineChart 
+              index={index}
+              labels={getRankingChartData(state?.answers?.map(each => each[index]?.answer))[0]}
+              values={getRankingChartData(state?.answers?.map(each => each[index]?.answer))[1]}
+              customDataLabels
+              totalResponse={getRankingChartData(state?.answers?.map(each => each[index]?.answer))[2]}
             />
           }
         </div>

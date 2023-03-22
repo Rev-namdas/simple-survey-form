@@ -6,6 +6,8 @@ import "../chart/chartbox.css"
 import ApexCharts from "apexcharts";
 import pptxgen from "pptxgenjs";
 import { saveReport } from '../../api/apiRequest';
+import "./responsecreate.css"
+import { toast, ToastContainer } from 'react-toastify';
 
 export default function ReportCreatePage() {
   const { state } = useLocation()
@@ -52,6 +54,30 @@ export default function ReportCreatePage() {
     return [labels, values]
   }
 
+  const getRankingChartData = (payload) => {
+    const arr = [] 
+    const total = payload.filter(each => each !== "").length
+    
+    payload
+      .filter(each => each !== "")
+      .forEach(each => {
+        each.split(",").forEach(each => {
+          arr.push(each.trim())
+        })
+      })
+
+    const obj = {}
+    for (let i = 0; i < arr.length; i++) {
+      const element = arr[i];
+      obj[element] = obj[element] ? obj[element] + 1 : 1;
+    }
+
+    let labels = Object.keys(obj)
+    let values = Object.values(obj)
+
+    return [labels, values, total]
+  }
+
   const handleChartTypeSelection = (e, index) => {
     const update = [...chartSelection]
     update[index] = e.target.value
@@ -66,27 +92,68 @@ export default function ReportCreatePage() {
   }
 
   const handleSave = async () => {
+    const report = {...reportDetails}
+    report["chart_selection"] = chartSelection
+
     const payload = {
       topic_id: state?.topic_id,
-      report: JSON.stringify(reportDetails)
+      report: JSON.stringify(report)
     }
   
     const res = await saveReport(payload)
-    console.log(res.message);
+    
+    if (res.flag === 'SUCCESS') {
+      toast.dismiss()
+      toast.success(res.message, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      
+    } else {
+      toast.dismiss()
+      toast.error(res.message, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
   }
 
   const handleGenerate = async () => {
     state?.questions?.forEach((_, index) => {
-      if(chartSelection[index] === '1'){
+      if((chartSelection[index] === '1') || (chartSelection[index] === '3')){
         ApexCharts.exec(`chart-pie-${index}`, "dataURI").then(({ imgURI }) => {
           setChartImgData(prev => [...prev, imgURI])
         })
-      } else if(chartSelection[index] === '2'){
+      } else if((chartSelection[index] === '2') || (chartSelection[index] === '4')){
         ApexCharts.exec(`chart-line-${index}`, "dataURI").then(({ imgURI }) => {
           setChartImgData(prev => [...prev, imgURI])
         })
       } 
     })
+    toast.dismiss()
+    toast.success('Report Generated', {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+
     setDownloadable(true)
    }
 
@@ -120,31 +187,33 @@ export default function ReportCreatePage() {
     
     pres.writeFile({ fileName: "Report" });
   }
-  // save as pdf
-  // const handleDownload = () => {
-  //   const doc = new jsPDF();
-  //   doc.text("Hello world!", 20, 10);
-  //   doc.addImage(data[0], 'png', 20, 15)
-  //   doc.text("Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus delectus unde illum repudiandae, alias sed, voluptates, qui iste iure placeat doloremque dolore eligendi libero culpa totam at. Cupiditate vitae autem tenetur quasi, dolore porro quis exercitationem et aspernatur minus harum aliquam rerum natus fugit nemo labore maiores modi ea doloribus.",
-  //    20, 100, { maxWidth: 170, align: "justify" });
-  //   doc.addPage()
-  //   doc.addImage(data[1], 'png', 10, 10)
-  //   doc.save("a4.pdf");
-  // }
   
   return (
     <>
-      <br />
-
-      <button onClick={handleSave}>Save</button>
-      {downloadable
-      ?
-        <button onClick={handleDownload}>Download</button>
-      :
-        <button onClick={handleGenerate}>Generate</button>
-      }
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
 
       <div className="chart-box">
+        <div className="response__create-btn-group">
+          <button onClick={handleSave} className="response__create-btn response__create-btn-save">Save</button>
+          {downloadable
+          ?
+            <button onClick={handleDownload} className="response__create-btn response__create-btn-download">Download</button>
+          :
+            <button onClick={handleGenerate} className="response__create-btn response__create-btn-generate">Generate</button>
+          }
+        </div>
+
         <div>Introduction</div>
 
         <textarea 
@@ -171,6 +240,8 @@ export default function ReportCreatePage() {
           <select value={chartSelection[index]} onChange={(e) => handleChartTypeSelection(e, index)}>
             <option value="1">Pie Chart</option>
             <option value="2">Bar Chart</option>
+            <option value="3">Pie Chart (Unique Data)</option>
+            <option value="4">Bar Chart (Unique Data)</option>
           </select>
 
           {chartSelection[index] === '1' &&
@@ -186,6 +257,26 @@ export default function ReportCreatePage() {
               index={index}
               labels={getChartData(state?.answers?.map(each => each[index]?.answer))[0]}
               values={getChartData(state?.answers?.map(each => each[index]?.answer))[1]}
+            />
+          }
+
+          {chartSelection[index] === '3' &&
+            <PieChart 
+              index={index}
+              labels={getRankingChartData(state?.answers?.map(each => each[index]?.answer))[0]}
+              values={getRankingChartData(state?.answers?.map(each => each[index]?.answer))[1]}
+              customDataLabels
+              totalResponse={getRankingChartData(state?.answers?.map(each => each[index]?.answer))[2]}
+            />
+          }
+
+          {chartSelection[index] === '4' &&
+            <LineChart 
+              index={index}
+              labels={getRankingChartData(state?.answers?.map(each => each[index]?.answer))[0]}
+              values={getRankingChartData(state?.answers?.map(each => each[index]?.answer))[1]}
+              customDataLabels
+              totalResponse={getRankingChartData(state?.answers?.map(each => each[index]?.answer))[2]}
             />
           }
         </div>

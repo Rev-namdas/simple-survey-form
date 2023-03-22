@@ -1,0 +1,46 @@
+.response__edit-btn-group{
+	display: flex;
+	gap: 0.5rem;
+	margin-bottom: 1rem;
+}
+
+.response__edit-btn{
+	border: none;
+	color: white;
+	padding: 0.3rem 0.5rem;
+	margin-top: 0.5rem;
+	cursor: pointer;
+	border-radius: 0.2rem;
+}
+
+.response__edit-btn-delete{
+	background-color: #e43838;
+}
+
+.response__edit-btn-delete:hover{
+	background-color: #c51a1a;
+}
+
+.response__edit-btn-download{
+	background-color: #1F8A70;
+}
+
+.response__edit-btn-download:hover{
+	background-color: #0e745a;
+}
+
+.response__edit-btn-generate{
+	background-color: #006da8;
+}
+
+.response__edit-btn-generate:hover{
+	background-color: #005c8d;
+}
+
+.response__edit-btn-update{
+	background-color: #3e28c0;
+}
+
+.response__edit-btn-update:hover{
+	background-color: #1f08a1;
+}

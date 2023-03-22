@@ -6,6 +6,8 @@ import "../chart/chartbox.css"
 import ApexCharts from "apexcharts";
 import pptxgen from "pptxgenjs";
 import { deleteReport, getReport, updateReport } from '../../api/apiRequest';
+import "./responseedit.css"
+import { toast, ToastContainer } from 'react-toastify';
 
 export default function ReportEditPage() {
   const { state } = useLocation()
@@ -18,15 +20,15 @@ export default function ReportEditPage() {
 
   const fetchReport = async () => {
     const res = await getReport(state.topic_id)
-    setReportDetails(JSON.parse(res.list))
+    const report = JSON.parse(res.list)
+    
+    setReportDetails(report)
+    setChartSelection(report.chart_selection)
     reportId.current = res.id
   }
 
   useEffect(() => {
     window.scrollTo(0,0)
-
-    const arr = state?.questions.map(_ => '1')
-    setChartSelection(arr)
 
     if(state?.topic_id){
       fetchReport()
@@ -64,6 +66,30 @@ export default function ReportEditPage() {
     return [labels, values]
   }
 
+  const getRankingChartData = (payload) => {
+    const arr = [] 
+    const total = payload.filter(each => each !== "").length
+    
+    payload
+      .filter(each => each !== "")
+      .forEach(each => {
+        each.split(",").forEach(each => {
+          arr.push(each.trim())
+        })
+      })
+
+    const obj = {}
+    for (let i = 0; i < arr.length; i++) {
+      const element = arr[i];
+      obj[element] = obj[element] ? obj[element] + 1 : 1;
+    }
+
+    let labels = Object.keys(obj)
+    let values = Object.values(obj)
+
+    return [labels, values, total]
+  }
+
   const handleChartTypeSelection = (e, index) => {
     const update = [...chartSelection]
     update[index] = e.target.value
@@ -78,27 +104,68 @@ export default function ReportEditPage() {
   }
 
   const handleUpdate = async () => {
+    const report = {...reportDetails}
+    report["chart_selection"] = chartSelection
+
     const payload = {
       id: reportId.current,
-      report: JSON.stringify(reportDetails)
+      report: JSON.stringify(report)
     }
 
     const res = await updateReport(payload)
-    console.log(res.message);
+
+    if (res.flag === 'SUCCESS') {
+      toast.dismiss()
+      toast.success(res.message, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } else {
+      toast.dismiss()
+      toast.error(res.message, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
   }
 
   const handleGenerate = async () => {
     state?.questions?.forEach((_, index) => {
-      if(chartSelection[index] === '1'){
+      if((chartSelection[index] === '1') || (chartSelection[index] === '3')){
         ApexCharts.exec(`chart-pie-${index}`, "dataURI").then(({ imgURI }) => {
           setChartImgData(prev => [...prev, imgURI])
         })
-      } else if(chartSelection[index] === '2'){
+      } else if((chartSelection[index] === '2') || (chartSelection[index] === '4')){
         ApexCharts.exec(`chart-line-${index}`, "dataURI").then(({ imgURI }) => {
           setChartImgData(prev => [...prev, imgURI])
         })
       } 
     })
+
+    toast.dismiss()
+    toast.success('Report Generated', {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+
     setDownloadable(true)
    }
 
@@ -144,18 +211,31 @@ export default function ReportEditPage() {
   
   return (
     <>
-      <br />
-
-      <button onClick={handleUpdate}>Update</button>
-      {downloadable
-      ?
-        <button onClick={handleDownload}>Download</button>
-      :
-        <button onClick={handleGenerate}>Generate</button>
-      }
-      <button onClick={handleDeleteReport}>Delete</button>
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
 
       <div className="chart-box">
+        <div className="response__edit-btn-group">
+          <button onClick={handleUpdate} className="response__edit-btn response__edit-btn-update">Update</button>
+          {downloadable
+          ?
+            <button onClick={handleDownload} className="response__edit-btn response__edit-btn-download">Download</button>
+          :
+            <button onClick={handleGenerate} className="response__edit-btn response__edit-btn-generate">Generate</button>
+          }
+          <button onClick={handleDeleteReport} className="response__edit-btn response__edit-btn-delete">Delete</button>
+        </div>
+
         <div>Introduction</div>
 
         <textarea 
@@ -182,6 +262,8 @@ export default function ReportEditPage() {
           <select value={chartSelection[index]} onChange={(e) => handleChartTypeSelection(e, index)}>
             <option value="1">Pie Chart</option>
             <option value="2">Bar Chart</option>
+            <option value="3">Pie Chart (Unique Data)</option>
+            <option value="4">Bar Chart (Unique Data)</option>
           </select>
 
           {chartSelection[index] === '1' &&
@@ -197,6 +279,26 @@ export default function ReportEditPage() {
               index={index}
               labels={getChartData(state?.answers?.map(each => each[index]?.answer))[0]}
               values={getChartData(state?.answers?.map(each => each[index]?.answer))[1]}
+            />
+          }
+
+          {chartSelection[index] === '3' &&
+            <PieChart 
+              index={index}
+              labels={getRankingChartData(state?.answers?.map(each => each[index]?.answer))[0]}
+              values={getRankingChartData(state?.answers?.map(each => each[index]?.answer))[1]}
+              customDataLabels
+              totalResponse={getRankingChartData(state?.answers?.map(each => each[index]?.answer))[2]}
+            />
+          }
+
+          {chartSelection[index] === '4' &&
+            <LineChart 
+              index={index}
+              labels={getRankingChartData(state?.answers?.map(each => each[index]?.answer))[0]}
+              values={getRankingChartData(state?.answers?.map(each => each[index]?.answer))[1]}
+              customDataLabels
+              totalResponse={getRankingChartData(state?.answers?.map(each => each[index]?.answer))[2]}
             />
           }
         </div>
